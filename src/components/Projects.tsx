@@ -18,7 +18,7 @@ const projects = [
   {
     title: "Green Terra",
     description: "A plant-based food service with sustainable packaging and eco-friendly options.",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5", // Restaurant with green theme
     category: "E-commerce & Sustainability"
   },
   {
@@ -48,19 +48,19 @@ const projects = [
   {
     title: "BrainCandy",
     description: "An education platform making learning engaging and interactive.",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7", // Updated image for BrainCandy
+    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1", // College classroom image
     category: "EdTech"
   },
   {
     title: "BrainCandy AI Study Assistant",
     description: "An AI-powered tool for personalized study assistance.",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
+    image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66", // Student studying image
     category: "AI & EdTech"
   },
   {
     title: "Feastify",
     description: "A cloud restaurant concept optimized for digital ordering and delivery.",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", // Modern restaurant interior
     category: "Cloud & Food Tech"
   },
   {
