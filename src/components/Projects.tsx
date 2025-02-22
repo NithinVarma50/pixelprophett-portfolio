@@ -1,7 +1,5 @@
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
@@ -50,7 +48,7 @@ const projects = [
   {
     title: "BrainCandy",
     description: "An education platform making learning engaging and interactive.",
-    image: "https://images.unsplash.com/photo-1501286353178-1ec881214838",
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7", // Updated image for BrainCandy
     category: "EdTech"
   },
   {
@@ -126,12 +124,8 @@ export default function Projects() {
                   <CardTitle>{project.title}</CardTitle>
                   <CardDescription>{project.category}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent>
                   <p className="text-muted-foreground">{project.description}</p>
-                  <Button variant="outline" className="w-full group">
-                    Learn More
-                    <ArrowRight className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" />
-                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
