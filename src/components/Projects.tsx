@@ -7,78 +7,92 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { 
+  Cloud, 
+  Leaf, 
+  Radio, 
+  Monitor, 
+  ShirtIcon, 
+  Cpu, 
+  GraduationCap,
+  Robot,
+  UtensilsCrossed,
+  Zap,
+  Lightbulb,
+  Rocket
+} from "lucide-react";
 
 const projects = [
   {
     title: "Cloudix",
-    description: "A cloud gaming service with dedicated servers and a custom gaming router.",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-    category: "Cloud Computing & Gaming"
+    description: "Cloud gaming service with custom gaming router",
+    icon: <Cloud className="w-12 h-12 text-primary/60" />,
+    category: "Cloud Computing"
   },
   {
     title: "Green Terra",
-    description: "A plant-based food service with sustainable packaging and eco-friendly options.",
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5", // Restaurant with green theme
-    category: "E-commerce & Sustainability"
+    description: "Sustainable food service platform",
+    icon: <Leaf className="w-12 h-12 text-primary/60" />,
+    category: "Sustainability"
   },
   {
     title: "Waveroo",
-    description: "A smart band & social media app enhancing real-world and virtual connectivity.",
-    image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9",
-    category: "Smart Devices & Social"
+    description: "Smart band enhancing connectivity",
+    icon: <Radio className="w-12 h-12 text-primary/60" />,
+    category: "Smart Devices"
   },
   {
     title: "Minimate",
-    description: "An affordable portable computer software for accessibility.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    description: "Portable computer software solution",
+    icon: <Monitor className="w-12 h-12 text-primary/60" />,
     category: "Software"
   },
   {
     title: "Vastramukti",
-    description: "A compact travel and fitness product blending fashion and function.",
-    image: "https://images.unsplash.com/photo-1483058712412-4245e9b90334",
-    category: "Fashion & Fitness"
+    description: "Innovative travel and fitness wear",
+    icon: <ShirtIcon className="w-12 h-12 text-primary/60" />,
+    category: "Fashion"
   },
   {
     title: "Matrix-Based Computer",
-    description: "A computing concept using multi-dimensional processing for efficiency.",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-    category: "Technology"
+    description: "Multi-dimensional processing system",
+    icon: <Cpu className="w-12 h-12 text-primary/60" />,
+    category: "Computing"
   },
   {
     title: "BrainCandy",
-    description: "An education platform making learning engaging and interactive.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1", // College classroom image
+    description: "Interactive learning platform",
+    icon: <GraduationCap className="w-12 h-12 text-primary/60" />,
     category: "EdTech"
   },
   {
-    title: "BrainCandy AI Study Assistant",
-    description: "An AI-powered tool for personalized study assistance.",
-    image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66", // Student studying image
-    category: "AI & EdTech"
+    title: "BrainCandy AI",
+    description: "AI-powered study assistant",
+    icon: <Robot className="w-12 h-12 text-primary/60" />,
+    category: "AI"
   },
   {
     title: "Feastify",
-    description: "A cloud restaurant concept optimized for digital ordering and delivery.",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", // Modern restaurant interior
-    category: "Cloud & Food Tech"
+    description: "Cloud restaurant platform",
+    icon: <UtensilsCrossed className="w-12 h-12 text-primary/60" />,
+    category: "Food Tech"
   },
   {
     title: "Velox AI",
-    description: "An AI automation tool improving business productivity.",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-    category: "AI & Automation"
+    description: "Business automation solution",
+    icon: <Zap className="w-12 h-12 text-primary/60" />,
+    category: "Automation"
   },
   {
     title: "Lumin",
-    description: "A smart lighting system with energy-efficient AI control.",
-    image: "https://images.unsplash.com/photo-1483058712412-4245e9b90334",
-    category: "Smart Home & IoT"
+    description: "Smart lighting system",
+    icon: <Lightbulb className="w-12 h-12 text-primary/60" />,
+    category: "IoT"
   },
   {
     title: "Evolvion",
-    description: "A tech-driven startup focused on innovation and futuristic solutions.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    description: "Future-focused tech innovations",
+    icon: <Rocket className="w-12 h-12 text-primary/60" />,
     category: "Innovation"
   }
 ];
@@ -98,7 +112,7 @@ export default function Projects() {
             Innovative Concepts & Ideas
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A collection of conceptual projects and innovative ideas showcasing my entrepreneurial thinking and problem-solving approach across various domains.
+            A showcase of conceptual projects demonstrating innovative problem-solving approaches.
           </p>
         </div>
 
@@ -111,21 +125,14 @@ export default function Projects() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="hover-card glass overflow-hidden h-full">
-                <div className="aspect-video relative overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-                </div>
-                <CardHeader>
-                  <CardTitle>{project.title}</CardTitle>
-                  <CardDescription>{project.category}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{project.description}</p>
+              <Card className="hover-card glass h-full">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4">
+                    {project.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <p className="text-sm text-muted-foreground">{project.description}</p>
+                  <span className="text-xs text-primary/60 mt-2">{project.category}</span>
                 </CardContent>
               </Card>
             </motion.div>

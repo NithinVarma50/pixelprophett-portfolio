@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Instagram } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function Hero() {
@@ -12,6 +12,25 @@ export default function Hero() {
         transition={{ duration: 0.5 }}
         className="max-w-4xl mx-auto"
       >
+        <div className="flex gap-6 justify-center mb-8">
+          <a 
+            href="https://www.instagram.com/this_is_nithinvarma?igsh=ZmRjcGVsOGp4enlq" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors"
+          >
+            <Instagram className="w-6 h-6" />
+          </a>
+          <a 
+            href="https://github.com/nithinvarma009" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors"
+          >
+            <Github className="w-6 h-6" />
+          </a>
+        </div>
+        
         <span className="text-primary font-medium mb-4 block">Hello, I'm</span>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold playfair mb-6">
           Nithin Varma
@@ -23,24 +42,13 @@ export default function Hero() {
           BBA Business Analytics (ongoing) student with a passion for developing innovative solutions 
           that merge technology and business. Also pursuing a Data Science course (ongoing).
         </p>
-        <div className="flex gap-4 justify-center mb-12">
+        <div className="flex gap-4 justify-center">
           <Button variant="outline" size="lg" className="glass">
             View Projects
           </Button>
           <Button size="lg" className="glass bg-primary hover:bg-primary/90">
             Get in Touch
           </Button>
-        </div>
-        <div className="flex gap-6 justify-center">
-          <a href="#" className="hover:text-primary transition-colors">
-            <Github className="w-6 h-6" />
-          </a>
-          <a href="#" className="hover:text-primary transition-colors">
-            <Linkedin className="w-6 h-6" />
-          </a>
-          <a href="mailto:nv787265@gmail.com" className="hover:text-primary transition-colors">
-            <Mail className="w-6 h-6" />
-          </a>
         </div>
       </motion.div>
       <div className="absolute inset-0 -z-10">
