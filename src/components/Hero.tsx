@@ -1,9 +1,14 @@
 
 import { motion } from "framer-motion";
-import { Github, Instagram } from "lucide-react";
+import { Github, Instagram, Discord } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function Hero() {
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    projectsSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="min-h-screen flex flex-col justify-center items-center section-padding text-center relative overflow-hidden">
       <motion.div
@@ -34,6 +39,14 @@ export default function Hero() {
             <Instagram className="w-6 h-6" />
           </a>
           <a 
+            href="https://discord.gg/xW8fEam2" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors"
+          >
+            <Discord className="w-6 h-6" />
+          </a>
+          <a 
             href="https://github.com/nithinvarma009" 
             target="_blank" 
             rel="noopener noreferrer"
@@ -44,12 +57,19 @@ export default function Hero() {
         </div>
 
         <div className="flex gap-4 justify-center">
-          <Button variant="outline" size="lg" className="glass">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="glass"
+            onClick={scrollToProjects}
+          >
             View Projects
           </Button>
-          <Button size="lg" className="glass bg-primary hover:bg-primary/90">
-            Get in Touch
-          </Button>
+          <a href="mailto:nithinvarma009@gmail.com">
+            <Button size="lg" className="glass bg-primary hover:bg-primary/90">
+              Get in Touch
+            </Button>
+          </a>
         </div>
       </motion.div>
       <div className="absolute inset-0 -z-10">
