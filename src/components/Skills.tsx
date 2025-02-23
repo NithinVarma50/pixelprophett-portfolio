@@ -1,52 +1,40 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
+import { Instagram } from "lucide-react";
 
-const skills = [
+const skillCategories = [
   {
-    category: "Business Innovation & Strategy",
-    projects: ["Cloudix", "Green Terra", "Feastify", "Evolvion"],
-    icon: "💡"
+    title: "Technical Skills",
+    skills: [
+      { name: "Data Analytics", icon: "📊" },
+      { name: "AI/ML Concepts", icon: "🤖" },
+      { name: "Cloud Technologies", icon: "☁️" },
+      { name: "Business Technology", icon: "💻" },
+      { name: "Advanced Excel", icon: "📈" },
+      { name: "Project Management", icon: "📋" }
+    ]
   },
   {
-    category: "Technology & Product Development",
-    projects: ["Minimate", "Matrix-Based Computer", "Lumin", "Velox AI"],
-    icon: "⚙️"
+    title: "Business Skills",
+    skills: [
+      { name: "Entrepreneurial Thinking", icon: "💡" },
+      { name: "Business Model Ideation", icon: "🎯" },
+      { name: "Market Analysis", icon: "📊" },
+      { name: "Pitch Creation", icon: "🎤" },
+      { name: "Sustainability Concepts", icon: "🌱" },
+      { name: "Product Conceptualization", icon: "⚡" }
+    ]
   },
   {
-    category: "AI & Automation",
-    projects: ["BrainCandy AI Study Assistant", "Velox AI"],
-    icon: "🤖"
-  },
-  {
-    category: "EdTech & Learning Solutions",
-    projects: ["BrainCandy", "BrainCandy AI Study Assistant"],
-    icon: "📚"
-  },
-  {
-    category: "Cloud Computing & Gaming",
-    projects: ["Cloudix"],
-    icon: "☁️"
-  },
-  {
-    category: "E-commerce & Digital Business",
-    projects: ["Feastify", "Green Terra"],
-    icon: "🛒"
-  },
-  {
-    category: "Smart Devices & Wearables",
-    projects: ["Waveroo", "Lumin"],
-    icon: "⌚"
-  },
-  {
-    category: "Sustainable & Eco-Friendly Innovations",
-    projects: ["Green Terra", "Vastramukti"],
-    icon: "🌱"
-  },
-  {
-    category: "Event Organization & Public Speaking",
-    description: "Shark Tank event participation, Innovators Den",
-    icon: "🎤"
+    title: "Soft Skills",
+    skills: [
+      { name: "Strategic Thinking", icon: "🧠" },
+      { name: "Creative Ideation", icon: "✨" },
+      { name: "Communication", icon: "💬" },
+      { name: "Adaptability", icon: "🔄" },
+      { name: "Problem Solving", icon: "🎯" }
+    ]
   }
 ];
 
@@ -62,31 +50,47 @@ export default function Skills() {
       >
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold playfair mb-4">Skills & Expertise</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            My skills span across various domains, demonstrated through successful projects and achievements.
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+            A comprehensive overview of my technical, business, and soft skills developed through education and project experiences.
           </p>
+          <a 
+            href="https://www.instagram.com/this_is_nithinvarma?igsh=ZmRjcGVsOGp4enlq" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
+          >
+            <Instagram className="w-5 h-5" />
+            <span>Follow me on Instagram</span>
+          </a>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skills.map((skill, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {skillCategories.map((category, categoryIndex) => (
             <motion.div
-              key={skill.category}
+              key={category.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: categoryIndex * 0.2 }}
             >
               <Card className="hover-card glass h-full">
-                <CardContent className="pt-6">
-                  <div className="text-4xl mb-4">{skill.icon}</div>
-                  <h3 className="text-xl font-semibold mb-3">{skill.category}</h3>
-                  {skill.projects ? (
-                    <p className="text-sm text-muted-foreground">
-                      Projects: {skill.projects.join(", ")}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">{skill.description}</p>
-                  )}
+                <CardContent className="p-6">
+                  <h3 className="text-2xl font-semibold mb-6 text-center">{category.title}</h3>
+                  <div className="space-y-4">
+                    {category.skills.map((skill, index) => (
+                      <motion.div
+                        key={skill.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="flex items-center gap-3"
+                      >
+                        <span className="text-xl">{skill.icon}</span>
+                        <span className="text-muted-foreground">{skill.name}</span>
+                      </motion.div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

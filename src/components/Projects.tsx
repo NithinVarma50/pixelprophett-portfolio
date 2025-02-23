@@ -95,10 +95,10 @@ export default function Projects() {
       >
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold playfair mb-4">
-            Featured Projects
+            Innovative Concepts & Ideas
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A collection of innovative solutions spanning various technology domains and business sectors.
+            A collection of conceptual projects and innovative ideas showcasing my entrepreneurial thinking and problem-solving approach across various domains.
           </p>
         </div>
 
