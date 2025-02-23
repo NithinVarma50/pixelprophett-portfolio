@@ -1,7 +1,6 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
-import { Instagram } from "lucide-react";
 
 const skillCategories = [
   {
@@ -50,18 +49,9 @@ export default function Skills() {
       >
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold playfair mb-4">Skills & Expertise</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             A comprehensive overview of my technical, business, and soft skills developed through education and project experiences.
           </p>
-          <a 
-            href="https://www.instagram.com/this_is_nithinvarma?igsh=ZmRjcGVsOGp4enlq" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
-          >
-            <Instagram className="w-5 h-5" />
-            <span>Follow me on Instagram</span>
-          </a>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
