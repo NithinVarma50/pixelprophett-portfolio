@@ -15,7 +15,7 @@ import {
   ShirtIcon, 
   Cpu, 
   GraduationCap,
-  Robot,
+  Bot,
   UtensilsCrossed,
   Zap,
   Lightbulb,
@@ -68,7 +68,7 @@ const projects = [
   {
     title: "BrainCandy AI",
     description: "AI-powered study assistant",
-    icon: <Robot className="w-12 h-12 text-primary/60" />,
+    icon: <Bot className="w-12 h-12 text-primary/60" />,
     category: "AI"
   },
   {
