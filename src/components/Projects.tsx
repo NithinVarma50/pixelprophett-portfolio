@@ -19,10 +19,18 @@ import {
   UtensilsCrossed,
   Zap,
   Lightbulb,
-  Rocket
+  Rocket,
+  GamepadIcon
 } from "lucide-react";
 
 const projects = [
+  {
+    title: "Tic Tac Toe Game",
+    description: "Interactive memory-based Tic Tac Toe game with unique twist - marks disappear after placement!",
+    icon: <GamepadIcon className="w-12 h-12 text-primary/60" />,
+    category: "Game Development",
+    link: "path-to-your-game.html" // You'll need to host this game file somewhere
+  },
   {
     title: "Cloudix",
     description: "Cloud gaming service with custom gaming router",
@@ -109,10 +117,10 @@ export default function Projects() {
       >
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold playfair mb-4">
-            Innovative Concepts & Ideas
+            Projects & Creations
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A showcase of conceptual projects demonstrating innovative problem-solving approaches.
+            A showcase of my personal projects and innovative solutions, including games and applications I've created from scratch.
           </p>
         </div>
 
@@ -130,7 +138,20 @@ export default function Projects() {
                   <div className="mb-4">
                     {project.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {project.link ? (
+                      <a 
+                        href={project.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                      >
+                        {project.title}
+                      </a>
+                    ) : (
+                      project.title
+                    )}
+                  </h3>
                   <p className="text-sm text-muted-foreground">{project.description}</p>
                   <span className="text-xs text-primary/60 mt-2">{project.category}</span>
                 </CardContent>
