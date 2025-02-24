@@ -15,9 +15,7 @@ const Index = () => {
       <Skills />
       <Projects />
       <Achievements />
-      <div className="section-padding bg-secondary/10">
-        <PersonalAI />
-      </div>
+      <PersonalAI />
       <Conclusion />
     </main>
   );
