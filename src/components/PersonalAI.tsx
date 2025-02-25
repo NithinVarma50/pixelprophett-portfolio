@@ -77,7 +77,9 @@ export default function PersonalAI() {
               role: "system",
               content: `You are NithinVarma's AI assistant. Here is information about Nithin:
               ${JSON.stringify(personalInfo, null, 2)}
-              Always respond in a helpful and friendly manner, providing accurate information about Nithin based on the data provided.`
+              Always provide detailed, contextual responses about Nithin based on the data provided. 
+              Analyze each question carefully and combine relevant information from different categories when appropriate.
+              Be conversational and natural in your responses.`
             },
             {
               role: "user",
@@ -96,7 +98,6 @@ export default function PersonalAI() {
       return data.choices[0].message.content;
     } catch (error) {
       console.error('DeepSeek API error:', error);
-      // Fallback to local response generation if API fails
       return fallbackGenerateResponse(question);
     }
   };
@@ -104,63 +105,48 @@ export default function PersonalAI() {
   const fallbackGenerateResponse = (question: string): string => {
     question = question.toLowerCase();
     
-    // Basic information
-    if (question.includes('name') || question.includes('who are you')) {
-      return `I am NithinVarma's AI assistant. I can tell you that Nithin is a ${personalInfo.basics.age}-year-old entrepreneur from ${personalInfo.basics.location}, born on ${personalInfo.basics.birthDate}.`;
-    }
-    
-    if (question.includes('age') || question.includes('born') || question.includes('birth')) {
-      return `Nithin is ${personalInfo.basics.age} years old, born on ${personalInfo.basics.birthDate}.`;
+    // Introduction and basic information
+    if (question.includes('who') || question.includes('tell me about') || question.includes('hi') || question.includes('hello')) {
+      return `Let me tell you about Nithin Varma! He's a ${personalInfo.basics.age}-year-old aspiring entrepreneur from ${personalInfo.basics.location}. Currently pursuing ${personalInfo.education.current} at ${personalInfo.education.institution}, Nithin is passionate about ${personalInfo.interests.slice(0, 3).join(', ')}, and more. His ultimate goal is ${personalInfo.goals}. Would you like to know more about his education, projects, or achievements?`;
     }
 
-    if (question.includes('contact') || question.includes('email') || question.includes('phone')) {
-      return `You can reach Nithin at:\nEmail: ${personalInfo.basics.email}\nPhone: ${personalInfo.basics.phone}`;
+    // Contact information with context
+    if (question.includes('contact') || question.includes('email') || question.includes('phone') || question.includes('reach')) {
+      return `You can connect with Nithin through:\nEmail: ${personalInfo.basics.email}\nPhone: ${personalInfo.basics.phone}\n\nNithin is currently based in ${personalInfo.basics.location} and attends college from ${personalInfo.education.collegeTime}. Feel free to reach out to discuss entrepreneurship, business innovation, or any of his projects!`;
     }
 
-    // Education
-    if (question.includes('study') || question.includes('course') || question.includes('education')) {
-      return `Nithin is pursuing ${personalInfo.education.current} at ${personalInfo.education.institution}, set to graduate in ${personalInfo.education.graduationYear}.`;
+    // Education with skills context
+    if (question.includes('study') || question.includes('course') || question.includes('education') || question.includes('college')) {
+      return `Nithin is pursuing a ${personalInfo.education.current} at ${personalInfo.education.institution}, set to graduate in ${personalInfo.education.graduationYear}. He's developing expertise in ${personalInfo.education.skills.join(', ')}. His college hours are ${personalInfo.education.collegeTime}, during which he actively participates in entrepreneurial activities and events like the Innovators Den.`;
     }
 
-    if (question.includes('college') && question.includes('time')) {
-      return `Nithin's college timing is ${personalInfo.education.collegeTime}.`;
+    // Projects with context
+    if (question.includes('project') || question.includes('startup') || question.includes('business') || question.includes('work')) {
+      return `Nithin has developed an impressive portfolio of innovative projects, including:\n\n${personalInfo.projects.join('\n')}.\n\nNotably, he's participated in events like Shark Tank to pitch his startup ideas, demonstrating his entrepreneurial spirit. His projects span various industries, reflecting his diverse interests in technology and business innovation.`;
     }
 
-    if (question.includes('skill')) {
-      return `Nithin's key skills include: ${personalInfo.education.skills.join(', ')}.`;
+    // Achievements with context
+    if (question.includes('achievement') || question.includes('accomplish') || question.includes('done')) {
+      return `Some of Nithin's notable achievements include:\n\n${personalInfo.achievements.join('\n')}.\n\nThese accomplishments showcase his leadership abilities and entrepreneurial mindset, aligning perfectly with his goal of becoming a successful entrepreneur and innovator.`;
     }
 
-    // Projects
-    if (question.includes('project') || question.includes('startup') || question.includes('business')) {
-      return `Nithin has worked on various innovative projects including: ${personalInfo.projects.join(', ')}.`;
+    // Interests and hobbies with context
+    if (question.includes('interest') || question.includes('hobby') || question.includes('like') || question.includes('enjoy')) {
+      return `Nithin has diverse interests that combine professional ambitions with personal growth. He's passionate about ${personalInfo.interests.join(', ')}. His interest in entrepreneurship and business innovation drives his project work, while he maintains a balanced lifestyle through fitness activities like badminton and jump rope exercises.`;
     }
 
-    // Achievements
-    if (question.includes('achievement') || question.includes('accomplish')) {
-      return `Some of Nithin's key achievements include: ${personalInfo.achievements.join('; ')}.`;
+    // Goals and aspirations
+    if (question.includes('goal') || question.includes('aim') || question.includes('future') || question.includes('plan')) {
+      return `Nithin's ultimate goal is ${personalInfo.goals}. To achieve this, he's already taking concrete steps by: \n1. Pursuing ${personalInfo.education.current}\n2. Developing practical skills in ${personalInfo.education.skills.join(', ')}\n3. Creating innovative projects like ${personalInfo.projects.slice(0, 3).join(', ')}\n4. Participating in entrepreneurial events and competitions`;
     }
 
-    // Interests
-    if (question.includes('interest') || question.includes('hobby') || question.includes('like')) {
-      return `Nithin's interests include: ${personalInfo.interests.join(', ')}.`;
+    // Age or birthday related
+    if (question.includes('age') || question.includes('old') || question.includes('birth') || question.includes('born')) {
+      return `Nithin is ${personalInfo.basics.age} years old, born on ${personalInfo.basics.birthDate}. Despite his young age, he's already accomplished significant achievements like ${personalInfo.achievements[0]} and has developed multiple innovative projects.`;
     }
 
-    // Goals
-    if (question.includes('goal') || question.includes('aim') || question.includes('future')) {
-      return `Nithin's goal is ${personalInfo.goals}.`;
-    }
-
-    // Event-specific
-    if (question.includes('innovators den') || question.includes('event')) {
-      return "Nithin is organizing Innovators Den, a major event at his college that brings together ambitious minds to showcase and discuss groundbreaking ideas.";
-    }
-
-    // Lifestyle
-    if (question.includes('fitness') || question.includes('exercise') || question.includes('sports')) {
-      return "Nithin is dedicated to fitness and plays badminton. He also includes jump rope exercises in his routine for fitness and growth.";
-    }
-
-    return "I'm NithinVarma's AI assistant. I can tell you about Nithin's background, education, projects, achievements, interests, and goals. Please feel free to ask about any of these topics!";
+    // For any other questions
+    return `As Nithin's AI assistant, I can tell you that he's a ${personalInfo.basics.age}-year-old aspiring entrepreneur from ${personalInfo.basics.location}, currently pursuing ${personalInfo.education.current}. He's passionate about ${personalInfo.interests.slice(0, 3).join(', ')}, and has worked on projects like ${personalInfo.projects.slice(0, 3).join(', ')}. What specific aspect of Nithin's journey would you like to know more about?`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
