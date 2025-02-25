@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
@@ -63,7 +62,46 @@ export default function PersonalAI() {
     goals: "To become a great entrepreneur and billionaire, building and scaling groundbreaking businesses that disrupt industries"
   };
 
-  const generateResponse = (question: string): string => {
+  const generateResponse = async (question: string): Promise<string> => {
+    try {
+      const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "deepseek-ai/DeepSeek-R1",
+          messages: [
+            {
+              role: "system",
+              content: `You are NithinVarma's AI assistant. Here is information about Nithin:
+              ${JSON.stringify(personalInfo, null, 2)}
+              Always respond in a helpful and friendly manner, providing accurate information about Nithin based on the data provided.`
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ],
+          max_tokens: 500
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error('DeepSeek API error:', error);
+      // Fallback to local response generation if API fails
+      return fallbackGenerateResponse(question);
+    }
+  };
+
+  const fallbackGenerateResponse = (question: string): string => {
     question = question.toLowerCase();
     
     // Basic information
@@ -168,9 +206,10 @@ export default function PersonalAI() {
     lastMessageTime[1](now);
 
     try {
+      const aiResponseContent = await generateResponse(input);
       const aiResponse: Message = {
         type: 'ai',
-        content: generateResponse(input)
+        content: aiResponseContent
       };
 
       setMessages(prev => [...prev, aiResponse]);
