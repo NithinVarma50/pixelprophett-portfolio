@@ -39,6 +39,31 @@ const iconMap: { [key: string]: React.ReactNode } = {
   rocket: <Rocket className="w-12 h-12 text-primary/60" />
 };
 
+// Mock data for when Supabase is not connected
+const mockProjects: Project[] = [
+  {
+    id: 1,
+    title: "AI Assistant",
+    description: "An intelligent virtual assistant powered by machine learning",
+    category: "Artificial Intelligence",
+    icon: "bot"
+  },
+  {
+    id: 2,
+    title: "Smart Home Hub",
+    description: "Central control system for home automation",
+    category: "IoT",
+    icon: "cpu"
+  },
+  {
+    id: 3,
+    title: "Eco Monitor",
+    description: "Environmental monitoring and analytics platform",
+    category: "Sustainability",
+    icon: "leaf"
+  }
+];
+
 export default function Projects() {
   const { toast } = useToast();
   
@@ -53,22 +78,20 @@ export default function Projects() {
         
         if (error) {
           console.error('Supabase error:', error);
-          return [];
+          // Return mock data if Supabase query fails
+          return mockProjects;
         }
         
-        return data as Project[];
+        return (data?.length ? data : mockProjects) as Project[];
       } catch (err) {
         console.error('Query error:', err);
-        return [];
+        // Return mock data if there's an error
+        return mockProjects;
       }
     },
-    // Prevent retries on error to avoid infinite loops
-    retry: false
+    retry: false,
+    initialData: mockProjects // Show mock data immediately while loading
   });
-
-  if (error) {
-    console.error('React Query error:', error);
-  }
 
   return (
     <section className="section-padding" id="projects">
@@ -94,7 +117,7 @@ export default function Projects() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(projects || [])?.map((project, index) => (
+            {projects.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 20 }}
