@@ -19,8 +19,7 @@ import {
   UtensilsCrossed,
   Zap,
   Lightbulb,
-  Rocket,
-  Loader2
+  Rocket
 } from "lucide-react";
 
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -63,19 +62,13 @@ const defaultProjects: Project[] = [
 ];
 
 export default function Projects() {
-  const { data: projects = defaultProjects } = useQuery({
+  const { data: projects } = useQuery({
     queryKey: ['projects'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('projects')
-        .select('*')
-        .order('id', { ascending: true });
-      
-      return (data || defaultProjects) as Project[];
-    },
+    queryFn: async () => defaultProjects,
     initialData: defaultProjects,
     retry: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: false // Disable the query completely for now
   });
 
   return (
@@ -97,7 +90,7 @@ export default function Projects() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {defaultProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
