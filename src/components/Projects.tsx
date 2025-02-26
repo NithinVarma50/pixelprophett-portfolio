@@ -45,25 +45,29 @@ export default function Projects() {
   const { data: projects, isLoading, error } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('id', { ascending: true });
-      
-      if (error) {
-        throw error;
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .order('id', { ascending: true });
+        
+        if (error) {
+          console.error('Supabase error:', error);
+          return [];
+        }
+        
+        return data as Project[];
+      } catch (err) {
+        console.error('Query error:', err);
+        return [];
       }
-      
-      return data as Project[];
-    }
+    },
+    // Prevent retries on error to avoid infinite loops
+    retry: false
   });
 
   if (error) {
-    toast({
-      variant: "destructive",
-      title: "Error loading projects",
-      description: "Please try again later."
-    });
+    console.error('React Query error:', error);
   }
 
   return (
@@ -90,7 +94,7 @@ export default function Projects() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects?.map((project, index) => (
+            {(projects || [])?.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -101,7 +105,7 @@ export default function Projects() {
                 <Card className="hover-card glass h-full">
                   <CardContent className="p-6 flex flex-col items-center text-center">
                     <div className="mb-4">
-                      {iconMap[project.icon.toLowerCase()]}
+                      {iconMap[project.icon?.toLowerCase() || 'rocket']}
                     </div>
                     <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                     <p className="text-sm text-muted-foreground">{project.description}</p>
