@@ -22,7 +22,6 @@ import {
   Rocket,
   Loader2
 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 
 const iconMap: { [key: string]: React.ReactNode } = {
   cloud: <Cloud className="w-12 h-12 text-primary/60" />,
@@ -39,8 +38,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
   rocket: <Rocket className="w-12 h-12 text-primary/60" />
 };
 
-// Mock data for when Supabase is not connected
-const mockProjects: Project[] = [
+const defaultProjects: Project[] = [
   {
     id: 1,
     title: "AI Assistant",
@@ -65,32 +63,19 @@ const mockProjects: Project[] = [
 ];
 
 export default function Projects() {
-  const { toast } = useToast();
-  
-  const { data: projects, isLoading, error } = useQuery({
+  const { data: projects = defaultProjects } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select('*')
-          .order('id', { ascending: true });
-        
-        if (error) {
-          console.error('Supabase error:', error);
-          // Return mock data if Supabase query fails
-          return mockProjects;
-        }
-        
-        return (data?.length ? data : mockProjects) as Project[];
-      } catch (err) {
-        console.error('Query error:', err);
-        // Return mock data if there's an error
-        return mockProjects;
-      }
+      const { data } = await supabase
+        .from('projects')
+        .select('*')
+        .order('id', { ascending: true });
+      
+      return (data || defaultProjects) as Project[];
     },
+    initialData: defaultProjects,
     retry: false,
-    initialData: mockProjects // Show mock data immediately while loading
+    refetchOnWindowFocus: false
   });
 
   return (
@@ -111,34 +96,28 @@ export default function Projects() {
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="hover-card glass h-full">
-                  <CardContent className="p-6 flex flex-col items-center text-center">
-                    <div className="mb-4">
-                      {iconMap[project.icon?.toLowerCase() || 'rocket']}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground">{project.description}</p>
-                    <span className="text-xs text-primary/60 mt-2">{project.category}</span>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="hover-card glass h-full">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4">
+                    {iconMap[project.icon?.toLowerCase() || 'rocket']}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <p className="text-sm text-muted-foreground">{project.description}</p>
+                  <span className="text-xs text-primary/60 mt-2">{project.category}</span>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     </section>
   );
