@@ -19,7 +19,8 @@ import {
   UtensilsCrossed,
   Zap,
   Lightbulb,
-  Rocket
+  Rocket,
+  Loader2
 } from "lucide-react";
 
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -37,38 +38,23 @@ const iconMap: { [key: string]: React.ReactNode } = {
   rocket: <Rocket className="w-12 h-12 text-primary/60" />
 };
 
-const defaultProjects: Project[] = [
-  {
-    id: 1,
-    title: "AI Assistant",
-    description: "An intelligent virtual assistant powered by machine learning",
-    category: "Artificial Intelligence",
-    icon: "bot"
-  },
-  {
-    id: 2,
-    title: "Smart Home Hub",
-    description: "Central control system for home automation",
-    category: "IoT",
-    icon: "cpu"
-  },
-  {
-    id: 3,
-    title: "Eco Monitor",
-    description: "Environmental monitoring and analytics platform",
-    category: "Sustainability",
-    icon: "leaf"
-  }
-];
-
 export default function Projects() {
-  const { data: projects } = useQuery({
+  const { data: projects, isLoading } = useQuery({
     queryKey: ['projects'],
-    queryFn: async () => defaultProjects,
-    initialData: defaultProjects,
-    retry: false,
-    refetchOnWindowFocus: false,
-    enabled: false // Disable the query completely for now
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('id', { ascending: true });
+      
+      if (error) {
+        console.error('Error fetching projects:', error);
+        throw error;
+      }
+      
+      return data as Project[];
+    },
+    retry: 1
   });
 
   return (
@@ -89,28 +75,38 @@ export default function Projects() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {defaultProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="hover-card glass h-full">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="mb-4">
-                    {iconMap[project.icon?.toLowerCase() || 'rocket']}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-sm text-muted-foreground">{project.description}</p>
-                  <span className="text-xs text-primary/60 mt-2">{project.category}</span>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        ) : projects && projects.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="hover-card glass h-full">
+                  <CardContent className="p-6 flex flex-col items-center text-center">
+                    <div className="mb-4">
+                      {iconMap[project.icon?.toLowerCase() || 'rocket']}
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground">{project.description}</p>
+                    <span className="text-xs text-primary/60 mt-2">{project.category}</span>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-muted-foreground">
+            No projects found. Please add some projects to your database.
+          </div>
+        )}
       </motion.div>
     </section>
   );
