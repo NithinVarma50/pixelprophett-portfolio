@@ -1,16 +1,16 @@
+
 import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
-import { Bot, Send, X, Loader2 } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface Message {
-  type: 'user' | 'ai';
-  content: string;
-}
+import { Message } from "@/types/chat";
+import { ChatMessage } from "./chat/ChatMessage";
+import { ChatInput } from "./chat/ChatInput";
+import { generateAIResponse } from "@/utils/ai-utils";
+import { personalInfo } from "@/data/personal-info";
 
 export default function PersonalAI() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -20,147 +20,9 @@ export default function PersonalAI() {
   const [messageCount, setMessageCount] = useState(0);
   const { toast } = useToast();
 
-  const MAX_MESSAGES = 50; // Increased from 20 to 50 messages per session
-  const MESSAGE_COOLDOWN = 1000; // Reduced cooldown to 1 second
+  const MAX_MESSAGES = 50;
+  const MESSAGE_COOLDOWN = 1000;
   const lastMessageTime = useState<number>(0);
-
-  // Personal information database
-  const personalInfo = {
-    basics: {
-      name: "Nithin Varma",
-      age: "17",
-      birthDate: "May 4, 2007",
-      email: "nv787265@gmail.com",
-      phone: "9381904726",
-      location: "India"
-    },
-    education: {
-      current: "BBA in Business Analytics",
-      institution: "Tapasya Degree College",
-      graduationYear: "2026",
-      collegeTime: "9:00 AM to 2:00 PM",
-      skills: ["Data Science", "Business Analytics", "MS Excel", "Business Problem-Solving"]
-    },
-    projects: [
-      "Cloudix", "Green Terra", "Feastify", "Waveroo", "Minimate",
-      "Brain Candy", "BrainCandy AI Study Assistant", "Matrix-Based Computer",
-      "Radianto", "Velox", "Evolvion", "Gravix", "Lumin"
-    ],
-    achievements: [
-      "Organizing Innovators Den event at college",
-      "Participated in Shark Tank event with startup pitch",
-      "Created multiple startup ideas across industries"
-    ],
-    interests: [
-      "Entrepreneurship",
-      "Business Innovation",
-      "Technology",
-      "Fitness",
-      "Badminton",
-      "Jump rope exercises"
-    ],
-    goals: "To become a great entrepreneur and billionaire, building and scaling groundbreaking businesses that disrupt industries"
-  };
-
-  const generateResponse = async (question: string): Promise<string> => {
-    try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-          'HTTP-Referer': window.location.origin,
-          'X-Title': 'Nithin Varma Portfolio'
-        },
-        body: JSON.stringify({
-          model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
-          messages: [
-            {
-              role: "system",
-              content: `You are NithinVarma's AI assistant. Here is information about Nithin:
-              ${JSON.stringify(personalInfo, null, 2)}
-              Instructions:
-              1. Provide detailed, contextual responses about Nithin
-              2. Be friendly and conversational
-              3. Format responses with markdown for better readability
-              4. Keep responses concise but informative
-              5. If asked about technical projects, provide specific details
-              6. For personal questions, maintain a professional tone
-              7. Use bullet points or numbered lists when appropriate
-              8. Include relevant context from multiple categories when applicable`
-            },
-            {
-              role: "user",
-              content: question
-            }
-          ]
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'API request failed');
-      }
-
-      const data = await response.json();
-      return data.choices[0].message.content;
-    } catch (error) {
-      console.error('OpenRouter API error:', error);
-      toast({
-        title: "AI Response Error",
-        description: "Falling back to local response generation",
-        variant: "destructive",
-      });
-      return fallbackGenerateResponse(question);
-    }
-  };
-
-  const fallbackGenerateResponse = (question: string): string => {
-    question = question.toLowerCase();
-    
-    // Introduction and basic information
-    if (question.includes('who') || question.includes('tell me about') || question.includes('hi') || question.includes('hello')) {
-      return `Let me tell you about Nithin Varma! He's a ${personalInfo.basics.age}-year-old aspiring entrepreneur from ${personalInfo.basics.location}. Currently pursuing ${personalInfo.education.current} at ${personalInfo.education.institution}, Nithin is passionate about ${personalInfo.interests.slice(0, 3).join(', ')}, and more. His ultimate goal is ${personalInfo.goals}. Would you like to know more about his education, projects, or achievements?`;
-    }
-
-    // Contact information with context
-    if (question.includes('contact') || question.includes('email') || question.includes('phone') || question.includes('reach')) {
-      return `You can connect with Nithin through:\nEmail: ${personalInfo.basics.email}\nPhone: ${personalInfo.basics.phone}\n\nNithin is currently based in ${personalInfo.basics.location} and attends college from ${personalInfo.education.collegeTime}. Feel free to reach out to discuss entrepreneurship, business innovation, or any of his projects!`;
-    }
-
-    // Education with skills context
-    if (question.includes('study') || question.includes('course') || question.includes('education') || question.includes('college')) {
-      return `Nithin is pursuing a ${personalInfo.education.current} at ${personalInfo.education.institution}, set to graduate in ${personalInfo.education.graduationYear}. He's developing expertise in ${personalInfo.education.skills.join(', ')}. His college hours are ${personalInfo.education.collegeTime}, during which he actively participates in entrepreneurial activities and events like the Innovators Den.`;
-    }
-
-    // Projects with context
-    if (question.includes('project') || question.includes('startup') || question.includes('business') || question.includes('work')) {
-      return `Nithin has developed an impressive portfolio of innovative projects, including:\n\n${personalInfo.projects.join('\n')}.\n\nNotably, he's participated in events like Shark Tank to pitch his startup ideas, demonstrating his entrepreneurial spirit. His projects span various industries, reflecting his diverse interests in technology and business innovation.`;
-    }
-
-    // Achievements with context
-    if (question.includes('achievement') || question.includes('accomplish') || question.includes('done')) {
-      return `Some of Nithin's notable achievements include:\n\n${personalInfo.achievements.join('\n')}.\n\nThese accomplishments showcase his leadership abilities and entrepreneurial mindset, aligning perfectly with his goal of becoming a successful entrepreneur and innovator.`;
-    }
-
-    // Interests and hobbies with context
-    if (question.includes('interest') || question.includes('hobby') || question.includes('like') || question.includes('enjoy')) {
-      return `Nithin has diverse interests that combine professional ambitions with personal growth. He's passionate about ${personalInfo.interests.join(', ')}. His interest in entrepreneurship and business innovation drives his project work, while he maintains a balanced lifestyle through fitness activities like badminton and jump rope exercises.`;
-    }
-
-    // Goals and aspirations
-    if (question.includes('goal') || question.includes('aim') || question.includes('future') || question.includes('plan')) {
-      return `Nithin's ultimate goal is ${personalInfo.goals}. To achieve this, he's already taking concrete steps by: \n1. Pursuing ${personalInfo.education.current}\n2. Developing practical skills in ${personalInfo.education.skills.join(', ')}\n3. Creating innovative projects like ${personalInfo.projects.slice(0, 3).join(', ')}\n4. Participating in entrepreneurial events and competitions`;
-    }
-
-    // Age or birthday related
-    if (question.includes('age') || question.includes('old') || question.includes('birth') || question.includes('born')) {
-      return `Nithin is ${personalInfo.basics.age} years old, born on ${personalInfo.basics.birthDate}. Despite his young age, he's already accomplished significant achievements like ${personalInfo.achievements[0]} and has developed multiple innovative projects.`;
-    }
-
-    // For any other questions
-    return `As Nithin's AI assistant, I can tell you that he's a ${personalInfo.basics.age}-year-old aspiring entrepreneur from ${personalInfo.basics.location}, currently pursuing ${personalInfo.education.current}. He's passionate about ${personalInfo.interests.slice(0, 3).join(', ')}, and has worked on projects like ${personalInfo.projects.slice(0, 3).join(', ')}. What specific aspect of Nithin's journey would you like to know more about?`;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,7 +66,7 @@ export default function PersonalAI() {
     lastMessageTime[1](now);
 
     try {
-      const aiResponseContent = await generateResponse(input);
+      const aiResponseContent = await generateAIResponse(input, personalInfo);
       const aiResponse: Message = {
         type: 'ai',
         content: aiResponseContent
@@ -253,52 +115,19 @@ export default function PersonalAI() {
                 <ScrollArea className="h-[400px] pr-4">
                   <div className="space-y-4">
                     {messages.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`flex ${
-                          message.type === 'user' ? 'justify-end' : 'justify-start'
-                        }`}
-                      >
-                        <div
-                          className={`rounded-lg px-4 py-2 max-w-[90%] ${
-                            message.type === 'user'
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted'
-                          } ${
-                            message.type === 'ai' ? 'prose prose-sm dark:prose-invert' : ''
-                          }`}
-                        >
-                          {message.content}
-                        </div>
-                      </div>
+                      <ChatMessage key={index} message={message} />
                     ))}
-                    {isLoading && (
-                      <div className="flex justify-start">
-                        <div className="rounded-lg px-4 py-2 bg-muted flex items-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Thinking...
-                        </div>
-                      </div>
-                    )}
+                    {isLoading && <ChatMessage isLoading />}
                   </div>
                 </ScrollArea>
 
-                <form onSubmit={handleSubmit} className="flex gap-2">
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask me anything about Nithin..."
-                    className="flex-1"
-                    disabled={isLoading || messageCount >= MAX_MESSAGES}
-                  />
-                  <Button 
-                    type="submit" 
-                    size="icon" 
-                    disabled={isLoading || messageCount >= MAX_MESSAGES}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </form>
+                <ChatInput
+                  input={input}
+                  setInput={setInput}
+                  onSubmit={handleSubmit}
+                  isDisabled={isLoading || messageCount >= MAX_MESSAGES}
+                />
+
                 {messageCount > 0 && (
                   <div className="text-xs text-muted-foreground text-center">
                     {MAX_MESSAGES - messageCount} messages remaining
