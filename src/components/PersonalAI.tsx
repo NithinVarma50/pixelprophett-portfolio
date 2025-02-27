@@ -3,7 +3,7 @@ import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
-import { Bot, Send, X } from "lucide-react";
+import { Bot, Send, X, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,8 +20,8 @@ export default function PersonalAI() {
   const [messageCount, setMessageCount] = useState(0);
   const { toast } = useToast();
 
-  const MAX_MESSAGES = 20; // Limit for messages per session
-  const MESSAGE_COOLDOWN = 2000; // 2 seconds cooldown between messages
+  const MAX_MESSAGES = 50; // Increased from 20 to 50 messages per session
+  const MESSAGE_COOLDOWN = 1000; // Reduced cooldown to 1 second
   const lastMessageTime = useState<number>(0);
 
   // Personal information database
@@ -79,9 +79,15 @@ export default function PersonalAI() {
               role: "system",
               content: `You are NithinVarma's AI assistant. Here is information about Nithin:
               ${JSON.stringify(personalInfo, null, 2)}
-              Always provide detailed, contextual responses about Nithin based on the data provided. 
-              Analyze each question carefully and combine relevant information from different categories when appropriate.
-              Be conversational and natural in your responses.`
+              Instructions:
+              1. Provide detailed, contextual responses about Nithin
+              2. Be friendly and conversational
+              3. Format responses with markdown for better readability
+              4. Keep responses concise but informative
+              5. If asked about technical projects, provide specific details
+              6. For personal questions, maintain a professional tone
+              7. Use bullet points or numbered lists when appropriate
+              8. Include relevant context from multiple categories when applicable`
             },
             {
               role: "user",
@@ -92,13 +98,19 @@ export default function PersonalAI() {
       });
 
       if (!response.ok) {
-        throw new Error('API request failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'API request failed');
       }
 
       const data = await response.json();
       return data.choices[0].message.content;
     } catch (error) {
       console.error('OpenRouter API error:', error);
+      toast({
+        title: "AI Response Error",
+        description: "Falling back to local response generation",
+        variant: "destructive",
+      });
       return fallbackGenerateResponse(question);
     }
   };
@@ -153,22 +165,20 @@ export default function PersonalAI() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check message limits
     if (messageCount >= MAX_MESSAGES) {
       toast({
         title: "Message limit reached",
-        description: "You've reached the maximum number of messages for this session. Please refresh to start a new session.",
+        description: `You've reached the maximum limit of ${MAX_MESSAGES} messages. Please refresh to start a new session.`,
         variant: "destructive",
       });
       return;
     }
 
-    // Check cooldown
     const now = Date.now();
     if (now - lastMessageTime[0] < MESSAGE_COOLDOWN) {
       toast({
         title: "Please wait",
-        description: "Please wait a moment before sending another message.",
+        description: "A moment before sending another message.",
         variant: "destructive",
       });
       return;
@@ -190,6 +200,7 @@ export default function PersonalAI() {
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
+    setInput('');
     lastMessageTime[1](now);
 
     try {
@@ -210,7 +221,6 @@ export default function PersonalAI() {
       console.error('AI response error:', error);
     } finally {
       setIsLoading(false);
-      setInput('');
     }
   };
 
@@ -224,7 +234,7 @@ export default function PersonalAI() {
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="w-[350px] shadow-2xl">
+            <Card className="w-[400px] shadow-2xl">
               <CardContent className="p-4 space-y-4">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
@@ -240,7 +250,7 @@ export default function PersonalAI() {
                   </Button>
                 </div>
 
-                <ScrollArea className="h-[300px] pr-4">
+                <ScrollArea className="h-[400px] pr-4">
                   <div className="space-y-4">
                     {messages.map((message, index) => (
                       <div
@@ -250,10 +260,12 @@ export default function PersonalAI() {
                         }`}
                       >
                         <div
-                          className={`rounded-lg px-4 py-2 max-w-[80%] ${
+                          className={`rounded-lg px-4 py-2 max-w-[90%] ${
                             message.type === 'user'
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-muted'
+                          } ${
+                            message.type === 'ai' ? 'prose prose-sm dark:prose-invert' : ''
                           }`}
                         >
                           {message.content}
@@ -262,7 +274,8 @@ export default function PersonalAI() {
                     ))}
                     {isLoading && (
                       <div className="flex justify-start">
-                        <div className="rounded-lg px-4 py-2 bg-muted">
+                        <div className="rounded-lg px-4 py-2 bg-muted flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
                           Thinking...
                         </div>
                       </div>
