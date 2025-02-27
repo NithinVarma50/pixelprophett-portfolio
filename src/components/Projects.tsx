@@ -4,59 +4,134 @@ import {
   Card,
   CardContent,
 } from "./ui/card";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
 import { Project } from "@/lib/types";
 import { 
-  Cloud, 
-  Leaf, 
-  Radio, 
-  Monitor, 
-  ShirtIcon, 
-  Cpu, 
-  GraduationCap,
+  Brain,
   Bot,
+  Cpu, 
+  Monitor,
+  Cloud,
+  Leaf,
   UtensilsCrossed,
-  Zap,
-  Lightbulb,
+  Radio,
   Rocket,
-  Loader2
+  Car,
+  Gamepad,
+  Zap,
+  Lightbulb
 } from "lucide-react";
 
 const iconMap: { [key: string]: React.ReactNode } = {
+  brain: <Brain className="w-12 h-12 text-primary/60" />,
+  bot: <Bot className="w-12 h-12 text-primary/60" />,
+  cpu: <Cpu className="w-12 h-12 text-primary/60" />,
+  monitor: <Monitor className="w-12 h-12 text-primary/60" />,
   cloud: <Cloud className="w-12 h-12 text-primary/60" />,
   leaf: <Leaf className="w-12 h-12 text-primary/60" />,
-  radio: <Radio className="w-12 h-12 text-primary/60" />,
-  monitor: <Monitor className="w-12 h-12 text-primary/60" />,
-  shirt: <ShirtIcon className="w-12 h-12 text-primary/60" />,
-  cpu: <Cpu className="w-12 h-12 text-primary/60" />,
-  graduation: <GraduationCap className="w-12 h-12 text-primary/60" />,
-  bot: <Bot className="w-12 h-12 text-primary/60" />,
   utensils: <UtensilsCrossed className="w-12 h-12 text-primary/60" />,
+  radio: <Radio className="w-12 h-12 text-primary/60" />,
+  rocket: <Rocket className="w-12 h-12 text-primary/60" />,
+  car: <Car className="w-12 h-12 text-primary/60" />,
+  gamepad: <Gamepad className="w-12 h-12 text-primary/60" />,
   zap: <Zap className="w-12 h-12 text-primary/60" />,
-  lightbulb: <Lightbulb className="w-12 h-12 text-primary/60" />,
-  rocket: <Rocket className="w-12 h-12 text-primary/60" />
+  lightbulb: <Lightbulb className="w-12 h-12 text-primary/60" />
 };
 
-export default function Projects() {
-  const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('id', { ascending: true });
-      
-      if (error) {
-        console.error('Error fetching projects:', error);
-        throw error;
-      }
-      
-      return data as Project[];
-    },
-    retry: 1
-  });
+const projects: Project[] = [
+  {
+    id: 1,
+    title: "Brain Candy",
+    description: "An innovative education platform designed to enhance learning experiences",
+    category: "Education",
+    icon: "brain"
+  },
+  {
+    id: 2,
+    title: "BrainCandy AI Study Assistant",
+    description: "An AI-powered study assistant that helps students with learning and productivity",
+    category: "AI & Education",
+    icon: "bot"
+  },
+  {
+    id: 3,
+    title: "Matrix-Based Computer",
+    description: "A next-generation computing system utilizing a multidimensional matrix structure",
+    category: "Computing",
+    icon: "cpu"
+  },
+  {
+    id: 4,
+    title: "Minimate",
+    description: "An affordable and portable computer software solution",
+    category: "Software",
+    icon: "monitor"
+  },
+  {
+    id: 5,
+    title: "Cloudix",
+    description: "A cloud gaming service offering optimized connectivity and performance",
+    category: "Gaming",
+    icon: "cloud"
+  },
+  {
+    id: 6,
+    title: "Green Terra",
+    description: "A plant-based food service with eco-friendly packaging and a sustainable approach",
+    category: "Sustainability",
+    icon: "leaf"
+  },
+  {
+    id: 7,
+    title: "Feastify",
+    description: "A cloud restaurant concept providing high-quality meals through online delivery",
+    category: "Food Tech",
+    icon: "utensils"
+  },
+  {
+    id: 8,
+    title: "Waveroo",
+    description: "A smart band and social media platform that connects people through real-life interactions",
+    category: "Social Tech",
+    icon: "radio"
+  },
+  {
+    id: 9,
+    title: "Radianto",
+    description: "A futuristic space station designed for advanced space exploration",
+    category: "Space Tech",
+    icon: "rocket"
+  },
+  {
+    id: 10,
+    title: "Velox AI",
+    description: "A high-performance car neural chip that enhances driving intelligence",
+    category: "Automotive AI",
+    icon: "car"
+  },
+  {
+    id: 11,
+    title: "Evolvion",
+    description: "A next-generation game designed with immersive and futuristic elements",
+    category: "Gaming",
+    icon: "gamepad"
+  },
+  {
+    id: 12,
+    title: "Gravix",
+    description: "An innovative electric vehicle (EV) car built for efficiency and performance",
+    category: "Automotive",
+    icon: "zap"
+  },
+  {
+    id: 13,
+    title: "Lumin",
+    description: "A cutting-edge street light technology focused on smart illumination and energy efficiency",
+    category: "Smart City",
+    icon: "lightbulb"
+  }
+];
 
+export default function Projects() {
   return (
     <section className="section-padding" id="projects">
       <motion.div
@@ -75,38 +150,28 @@ export default function Projects() {
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        ) : projects && projects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="hover-card glass h-full">
-                  <CardContent className="p-6 flex flex-col items-center text-center">
-                    <div className="mb-4">
-                      {iconMap[project.icon?.toLowerCase() || 'rocket']}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground">{project.description}</p>
-                    <span className="text-xs text-primary/60 mt-2">{project.category}</span>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-muted-foreground">
-            No projects found. Please add some projects to your database.
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="hover-card glass h-full">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4">
+                    {iconMap[project.icon?.toLowerCase() || 'rocket']}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <p className="text-sm text-muted-foreground">{project.description}</p>
+                  <span className="text-xs text-primary/60 mt-2">{project.category}</span>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     </section>
   );
