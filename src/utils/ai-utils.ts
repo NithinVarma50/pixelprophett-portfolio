@@ -1,21 +1,23 @@
+
 import { PersonalInfo } from "@/types/chat";
 import { toast } from "@/hooks/use-toast";
+
+const MISTRAL_API_ENDPOINT = "https://api.mistral.ai/v1/chat/completions";
 
 export const generateAIResponse = async (
   question: string,
   personalInfo: PersonalInfo
 ): Promise<string> => {
+  // Try Mistral AI first
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch(MISTRAL_API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-        'HTTP-Referer': window.location.origin,
-        'X-Title': 'Nithin Varma Portfolio'
+        'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+        model: "mistral-medium",
         messages: [
           {
             role: "system",
@@ -35,25 +37,71 @@ export const generateAIResponse = async (
             role: "user",
             content: question
           }
-        ]
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
       })
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'API request failed');
+      throw new Error('Mistral API request failed');
     }
 
     const data = await response.json();
     return data.choices[0].message.content;
-  } catch (error) {
-    console.error('OpenRouter API error:', error);
-    toast({
-      title: "AI Response Error",
-      description: "Falling back to local response generation",
-      variant: "destructive",
-    });
-    return fallbackGenerateResponse(question, personalInfo);
+  } catch (mistralError) {
+    console.error('Mistral AI error:', mistralError);
+    
+    // Fallback to OpenRouter if Mistral fails
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'Nithin Varma Portfolio'
+        },
+        body: JSON.stringify({
+          model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+          messages: [
+            {
+              role: "system",
+              content: `You are NithinVarma's AI assistant. Here is information about Nithin:
+              ${JSON.stringify(personalInfo, null, 2)}
+              Instructions:
+              1. Provide detailed, contextual responses about Nithin
+              2. Be friendly and conversational
+              3. Format responses with markdown for better readability
+              4. Keep responses concise but informative
+              5. If asked about technical projects, provide specific details
+              6. For personal questions, maintain a professional tone
+              7. Use bullet points or numbered lists when appropriate
+              8. Include relevant context from multiple categories when applicable`
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('OpenRouter API request failed');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (openRouterError) {
+      console.error('OpenRouter API error:', openRouterError);
+      toast({
+        title: "AI Response Error",
+        description: "Falling back to local response generation",
+        variant: "destructive",
+      });
+      return fallbackGenerateResponse(question, personalInfo);
+    }
   }
 };
 
