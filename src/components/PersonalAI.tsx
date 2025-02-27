@@ -64,14 +64,16 @@ export default function PersonalAI() {
 
   const generateResponse = async (question: string): Promise<string> => {
     try {
-      const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_API_KEY}`
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'Nithin Varma Portfolio'
         },
         body: JSON.stringify({
-          model: "deepseek-ai/DeepSeek-R1",
+          model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
           messages: [
             {
               role: "system",
@@ -85,8 +87,7 @@ export default function PersonalAI() {
               role: "user",
               content: question
             }
-          ],
-          max_tokens: 500
+          ]
         })
       });
 
@@ -97,7 +98,7 @@ export default function PersonalAI() {
       const data = await response.json();
       return data.choices[0].message.content;
     } catch (error) {
-      console.error('DeepSeek API error:', error);
+      console.error('OpenRouter API error:', error);
       return fallbackGenerateResponse(question);
     }
   };
