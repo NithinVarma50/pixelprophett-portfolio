@@ -1,6 +1,7 @@
 
 import { Message } from "@/types/chat";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ChatMessageProps {
   message?: Message;
@@ -11,8 +12,8 @@ export function ChatMessage({ message, isLoading }: ChatMessageProps) {
   if (isLoading) {
     return (
       <div className="flex justify-start">
-        <div className="rounded-lg px-4 py-2 bg-muted flex items-center gap-2">
-          <Loader2 className="h-4 w-4 animate-spin" />
+        <div className="rounded-lg px-3 py-2 text-xs sm:text-sm bg-muted flex items-center gap-2">
+          <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
           Thinking...
         </div>
       </div>
@@ -23,18 +24,19 @@ export function ChatMessage({ message, isLoading }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex ${
+      className={cn(
+        "flex",
         message.type === 'user' ? 'justify-end' : 'justify-start'
-      }`}
+      )}
     >
       <div
-        className={`rounded-lg px-4 py-2 max-w-[90%] ${
+        className={cn(
+          "rounded-lg px-3 py-2 text-xs sm:text-sm max-w-[85%] sm:max-w-[90%]",
           message.type === 'user'
             ? 'bg-primary text-primary-foreground'
-            : 'bg-muted'
-        } ${
+            : 'bg-muted',
           message.type === 'ai' ? 'prose prose-sm dark:prose-invert' : ''
-        }`}
+        )}
       >
         {message.content}
       </div>

@@ -4,55 +4,69 @@ import { toast } from "@/hooks/use-toast";
 
 const MISTRAL_API_ENDPOINT = "https://api.mistral.ai/v1/chat/completions";
 
+// Check if API keys are available
+const isMistralKeyAvailable = () => 
+  !!import.meta.env.VITE_MISTRAL_API_KEY && 
+  import.meta.env.VITE_MISTRAL_API_KEY !== "undefined";
+
+const isOpenRouterKeyAvailable = () => 
+  !!import.meta.env.VITE_OPENROUTER_API_KEY && 
+  import.meta.env.VITE_OPENROUTER_API_KEY !== "undefined";
+
 export const generateAIResponse = async (
   question: string,
   personalInfo: PersonalInfo
 ): Promise<string> => {
-  // Try Mistral AI first
-  try {
-    const response = await fetch(MISTRAL_API_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "mistral-medium",
-        messages: [
-          {
-            role: "system",
-            content: `You are NithinVarma's AI assistant. Here is information about Nithin:
-            ${JSON.stringify(personalInfo, null, 2)}
-            Instructions:
-            1. Provide detailed, contextual responses about Nithin
-            2. Be friendly and conversational
-            3. Format responses with markdown for better readability
-            4. Keep responses concise but informative
-            5. If asked about technical projects, provide specific details
-            6. For personal questions, maintain a professional tone
-            7. Use bullet points or numbered lists when appropriate
-            8. Include relevant context from multiple categories when applicable`
-          },
-          {
-            role: "user",
-            content: question
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
-      })
-    });
+  // Try Mistral AI first if the key is available
+  if (isMistralKeyAvailable()) {
+    try {
+      const response = await fetch(MISTRAL_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "mistral-medium",
+          messages: [
+            {
+              role: "system",
+              content: `You are NithinVarma's AI assistant. Here is information about Nithin:
+              ${JSON.stringify(personalInfo, null, 2)}
+              Instructions:
+              1. Provide detailed, contextual responses about Nithin
+              2. Be friendly and conversational
+              3. Format responses with markdown for better readability
+              4. Keep responses concise but informative
+              5. If asked about technical projects, provide specific details
+              6. For personal questions, maintain a professional tone
+              7. Use bullet points or numbered lists when appropriate
+              8. Include relevant context from multiple categories when applicable`
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1000
+        })
+      });
 
-    if (!response.ok) {
-      throw new Error('Mistral API request failed');
+      if (!response.ok) {
+        throw new Error(`Mistral API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (mistralError) {
+      console.error('Mistral AI error:', mistralError);
+      // Continue to fallback options
     }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  } catch (mistralError) {
-    console.error('Mistral AI error:', mistralError);
-    
-    // Fallback to OpenRouter if Mistral fails
+  }
+  
+  // Fallback to OpenRouter if Mistral fails or key is missing
+  if (isOpenRouterKeyAvailable()) {
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -88,21 +102,33 @@ export const generateAIResponse = async (
       });
 
       if (!response.ok) {
-        throw new Error('OpenRouter API request failed');
+        throw new Error(`OpenRouter API request failed: ${response.status}`);
       }
 
       const data = await response.json();
       return data.choices[0].message.content;
     } catch (openRouterError) {
       console.error('OpenRouter API error:', openRouterError);
-      toast({
-        title: "AI Response Error",
-        description: "Falling back to local response generation",
-        variant: "destructive",
-      });
-      return fallbackGenerateResponse(question, personalInfo);
+      // Continue to fallback
     }
   }
+  
+  // If both API services failed or keys are missing, notify user and use fallback
+  if (!isMistralKeyAvailable() && !isOpenRouterKeyAvailable()) {
+    toast({
+      title: "API Keys Missing",
+      description: "Please add your Mistral AI or OpenRouter API key in the environment variables.",
+      variant: "destructive",
+    });
+  } else {
+    toast({
+      title: "AI Response Error",
+      description: "Both AI services failed. Using local responses instead.",
+      variant: "destructive",
+    });
+  }
+  
+  return fallbackGenerateResponse(question, personalInfo);
 };
 
 export const fallbackGenerateResponse = (question: string, personalInfo: PersonalInfo): string => {

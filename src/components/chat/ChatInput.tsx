@@ -17,15 +17,16 @@ export function ChatInput({ input, setInput, onSubmit, isDisabled }: ChatInputPr
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Ask me anything about Nithin..."
-        className="flex-1"
+        className="flex-1 text-xs sm:text-sm h-8 sm:h-10"
         disabled={isDisabled}
       />
       <Button 
         type="submit" 
         size="icon" 
         disabled={isDisabled}
+        className="h-8 w-8 sm:h-10 sm:w-10"
       >
-        <Send className="h-4 w-4" />
+        <Send className="h-3 w-3 sm:h-4 sm:w-4" />
       </Button>
     </form>
   );
