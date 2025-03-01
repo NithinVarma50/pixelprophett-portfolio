@@ -149,7 +149,7 @@ export default function PersonalAI() {
                 <div className="flex items-center justify-between mb-2 sm:mb-4">
                   <div className="flex items-center gap-2">
                     <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                    <h3 className="text-base sm:text-lg font-semibold">Nithin's AI Assistant</h3>
+                    <h3 className="text-base sm:text-lg font-semibold">My AI Assistant</h3>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button 
@@ -225,7 +225,7 @@ export default function PersonalAI() {
                       <div className="space-y-3 sm:space-y-4">
                         {messages.length === 0 && (
                           <div className="text-xs sm:text-sm text-center text-muted-foreground p-4">
-                            Hi! I'm Nithin's AI assistant. Ask me anything about Nithin Varma!
+                            Hi! I'm your AI assistant. Ask me anything!
                           </div>
                         )}
                         {messages.map((message, index) => (

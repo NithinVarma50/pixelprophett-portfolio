@@ -77,7 +77,7 @@ export function ChatInput({ input, setInput, onSubmit, isDisabled }: ChatInputPr
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask me anything about Nithin..."
+            placeholder="Ask me anything..."
             className="flex-1 text-xs sm:text-sm h-8 sm:h-10"
             disabled={isDisabled}
           />
