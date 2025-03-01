@@ -68,16 +68,17 @@ export const generateAIResponse = async (
   // Fallback to OpenRouter if Mistral fails or key is missing
   if (isOpenRouterKeyAvailable()) {
     try {
+      // Updated OpenRouter implementation to match the Python example
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-          'HTTP-Referer': window.location.origin,
-          'X-Title': 'Nithin Varma Portfolio'
+          'HTTP-Referer': window.location.origin, // Site URL for rankings
+          'X-Title': 'Nithin Varma Portfolio' // Site name for rankings
         },
         body: JSON.stringify({
-          model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+          model: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free", // Updated model to match the Python example
           messages: [
             {
               role: "system",
@@ -97,7 +98,8 @@ export const generateAIResponse = async (
               role: "user",
               content: question
             }
-          ]
+          ],
+          temperature: 0.7
         })
       });
 
