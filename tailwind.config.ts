@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -110,7 +111,39 @@ export default {
 				"background-shine": {
 					"from": { backgroundPosition: "200% 0" },
 					"to": { backgroundPosition: "0% 0" }
-				}
+				},
+                "slide-up": {
+                    "0%": { transform: "translateY(100px)", opacity: "0" },
+                    "100%": { transform: "translateY(0)", opacity: "1" }
+                },
+                "slide-down": {
+                    "0%": { transform: "translateY(-100px)", opacity: "0" },
+                    "100%": { transform: "translateY(0)", opacity: "1" }
+                },
+                "slide-left": {
+                    "0%": { transform: "translateX(100px)", opacity: "0" },
+                    "100%": { transform: "translateX(0)", opacity: "1" }
+                },
+                "slide-right": {
+                    "0%": { transform: "translateX(-100px)", opacity: "0" },
+                    "100%": { transform: "translateX(0)", opacity: "1" }
+                },
+                "zoom-in": {
+                    "0%": { transform: "scale(0.5)", opacity: "0" },
+                    "100%": { transform: "scale(1)", opacity: "1" }
+                },
+                "bounce-light": {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(-15px)" }
+                },
+                "text-focus-in": {
+                    "0%": { filter: "blur(12px)", opacity: "0" },
+                    "100%": { filter: "blur(0px)", opacity: "1" }
+                },
+                "text-shimmer": {
+                    "0%": { backgroundPosition: "200% 0" },
+                    "100%": { backgroundPosition: "-200% 0" }
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -119,7 +152,15 @@ export default {
 				"pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
 				"rotate-slow": "rotate-slow 8s linear infinite",
 				"wave": "wave 2.5s ease-in-out infinite",
-				"background-shine": "background-shine 8s linear infinite"
+				"background-shine": "background-shine 8s linear infinite",
+                "slide-up": "slide-up 0.6s ease-out",
+                "slide-down": "slide-down 0.6s ease-out",
+                "slide-left": "slide-left 0.6s ease-out",
+                "slide-right": "slide-right 0.6s ease-out",
+                "zoom-in": "zoom-in 0.7s ease-out",
+                "bounce-light": "bounce-light 3s ease-in-out infinite",
+                "text-focus-in": "text-focus-in 1s cubic-bezier(0.550, 0.085, 0.680, 0.530)",
+                "text-shimmer": "text-shimmer 3s infinite linear"
 			}
 		}
 	},
