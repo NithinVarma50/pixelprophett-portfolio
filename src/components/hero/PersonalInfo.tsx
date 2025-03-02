@@ -1,0 +1,66 @@
+
+import { motion } from "framer-motion";
+import ProfileAvatar from "../ProfileAvatar";
+
+export default function PersonalInfo() {
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="flex flex-col items-center mb-6"
+      >
+        <ProfileAvatar />
+        <motion.span 
+          className="text-primary font-medium mt-4 block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          Hello, I'm
+        </motion.span>
+      </motion.div>
+      
+      <motion.h1 
+        className="text-4xl md:text-6xl lg:text-7xl font-bold playfair mb-6 relative"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+      >
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-background-shine">
+          Nithin Varma
+        </span>
+        <motion.span 
+          className="absolute -top-1 -right-1 md:top-0 md:right-8 text-2xl"
+          animate={{ rotate: [0, 20, 0] }}
+          transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
+        >
+          👋
+        </motion.span>
+      </motion.h1>
+      <motion.div
+        className="flex items-center justify-center gap-2 mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <span className="text-xl md:text-2xl text-muted-foreground">Polymath</span>
+        <span className="text-2xl">•</span>
+        <span className="text-xl md:text-2xl text-muted-foreground">Innovator</span>
+        <span className="text-2xl">•</span>
+        <span className="text-xl md:text-2xl text-muted-foreground">Entrepreneur</span>
+      </motion.div>
+      <motion.p 
+        className="text-lg text-muted-foreground/80 mb-8 max-w-2xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
+      >
+        Bridging business, technology, and creativity to solve complex problems.
+        BBA Business Analytics student with parallel pursuits in Data Science,
+        entrepreneurship, and innovation.
+      </motion.p>
+    </>
+  );
+}
