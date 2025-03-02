@@ -1,7 +1,7 @@
-
 import { motion } from "framer-motion";
 import { Github, Instagram } from "lucide-react";
 import { Button } from "./ui/button";
+import ProfileAvatar from "./ProfileAvatar";
 
 export default function Hero() {
   const scrollToProjects = () => {
@@ -17,14 +17,23 @@ export default function Hero() {
         transition={{ duration: 0.5 }}
         className="max-w-4xl mx-auto relative z-10"
       >
-        <motion.span 
-          className="text-primary font-medium mb-4 block"
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
+          className="flex flex-col items-center mb-6"
         >
-          Hello, I'm
-        </motion.span>
+          <ProfileAvatar />
+          <motion.span 
+            className="text-primary font-medium mt-4 block"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            Hello, I'm
+          </motion.span>
+        </motion.div>
+        
         <motion.h1 
           className="text-4xl md:text-6xl lg:text-7xl font-bold playfair mb-6 relative"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -154,7 +163,6 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Moving gradient background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background/50" />
         <motion.div 
@@ -171,7 +179,6 @@ export default function Hero() {
         />
       </div>
 
-      {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(6)].map((_, i) => (
           <motion.div
