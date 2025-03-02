@@ -42,22 +42,27 @@ export default function Hero() {
             👋
           </motion.span>
         </motion.h1>
-        <motion.p 
-          className="text-xl md:text-2xl text-muted-foreground mb-8"
+        <motion.div
+          className="flex items-center justify-center gap-2 mb-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
         >
-          Innovating the Future | Solving Business Problems
-        </motion.p>
+          <span className="text-xl md:text-2xl text-muted-foreground">Polymath</span>
+          <span className="text-2xl">•</span>
+          <span className="text-xl md:text-2xl text-muted-foreground">Innovator</span>
+          <span className="text-2xl">•</span>
+          <span className="text-xl md:text-2xl text-muted-foreground">Entrepreneur</span>
+        </motion.div>
         <motion.p 
           className="text-lg text-muted-foreground/80 mb-8 max-w-2xl mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
         >
-          BBA Business Analytics (ongoing) student with a passion for developing innovative solutions 
-          that merge technology and business. Also pursuing a Data Science course (ongoing).
+          Bridging business, technology, and creativity to solve complex problems.
+          BBA Business Analytics student with parallel pursuits in Data Science,
+          entrepreneurship, and innovation.
         </motion.p>
         
         <motion.div 
