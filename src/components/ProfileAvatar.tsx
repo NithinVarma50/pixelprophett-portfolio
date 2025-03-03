@@ -12,8 +12,22 @@ export default function ProfileAvatar() {
       className="relative"
     >
       <Avatar className="h-24 w-24 border-2 border-primary shadow-lg">
-        <AvatarImage src="/avatar.png" alt="Nithin Varma" />
-        <AvatarFallback className="bg-primary/20 text-xl font-bold">NV</AvatarFallback>
+        <AvatarImage src="/cartoon-avatar.png" alt="Nithin Varma" />
+        <AvatarFallback className="bg-primary/20">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 64 64"
+            className="w-full h-full text-primary/80"
+          >
+            <circle cx="32" cy="18" r="12" fill="currentColor" />
+            <path
+              d="M54,56c0-12.15-9.85-22-22-22S10,43.85,10,56"
+              stroke="currentColor"
+              strokeWidth="8"
+              fill="none"
+            />
+          </svg>
+        </AvatarFallback>
       </Avatar>
       <motion.div 
         className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-background"
