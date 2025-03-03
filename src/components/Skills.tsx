@@ -54,7 +54,7 @@ export default function Skills() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.title}
@@ -66,7 +66,7 @@ export default function Skills() {
               <Card className="hover-card glass h-full">
                 <CardContent className="p-4 sm:p-6">
                   <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center">{category.title}</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-3">
                     {category.skills.map((skill, index) => (
                       <motion.div
                         key={skill.name}
