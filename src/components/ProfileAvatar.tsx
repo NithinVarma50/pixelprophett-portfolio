@@ -12,7 +12,7 @@ export default function ProfileAvatar() {
       className="relative"
     >
       <Avatar className="h-24 w-24 border-2 border-primary shadow-lg">
-        <AvatarImage src="/cartoon-avatar.png" alt="Nithin Varma" />
+        <AvatarImage src="/lovable-uploads/69539b53-de64-4e8f-bd06-984c03478595.png" alt="Nithin Varma" />
         <AvatarFallback className="bg-primary/20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
