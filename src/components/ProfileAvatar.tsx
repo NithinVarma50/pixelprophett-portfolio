@@ -11,7 +11,7 @@ export default function ProfileAvatar() {
       whileHover={{ scale: 1.05 }}
       className="relative"
     >
-      <Avatar className="h-24 w-24 border-2 border-primary shadow-lg">
+      <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-primary shadow-lg">
         <AvatarImage src="/lovable-uploads/69539b53-de64-4e8f-bd06-984c03478595.png" alt="Nithin Varma" />
         <AvatarFallback className="bg-primary/20">
           <svg
@@ -30,7 +30,7 @@ export default function ProfileAvatar() {
         </AvatarFallback>
       </Avatar>
       <motion.div 
-        className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-background"
+        className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center border-2 border-background"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.8 }}

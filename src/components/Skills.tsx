@@ -47,14 +47,14 @@ export default function Skills() {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold playfair mb-4">Skills & Expertise</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold playfair mb-3 sm:mb-4">Skills & Expertise</h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-2">
             A comprehensive overview of my technical, business, and soft skills developed through education and project experiences.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.title}
@@ -64,9 +64,9 @@ export default function Skills() {
               transition={{ duration: 0.5, delay: categoryIndex * 0.2 }}
             >
               <Card className="hover-card glass h-full">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-semibold mb-6 text-center">{category.title}</h3>
-                  <div className="space-y-4">
+                <CardContent className="p-4 sm:p-6">
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center">{category.title}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {category.skills.map((skill, index) => (
                       <motion.div
                         key={skill.name}
@@ -74,10 +74,10 @@ export default function Skills() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.3, delay: index * 0.1 }}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-2 sm:gap-3"
                       >
-                        <span className="text-xl">{skill.icon}</span>
-                        <span className="text-muted-foreground">{skill.name}</span>
+                        <span className="text-lg sm:text-xl">{skill.icon}</span>
+                        <span className="text-sm sm:text-base text-muted-foreground">{skill.name}</span>
                       </motion.div>
                     ))}
                   </div>
