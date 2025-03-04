@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
-import { Bot, X, Settings } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { Message } from "@/types/chat";
 import { ChatMessage } from "./chat/ChatMessage";
 import { ChatInput } from "./chat/ChatInput";
-import { generateAIResponse } from "@/utils/ai-utils";
-import { personalInfo } from "@/data/personal-info";
+import { sendChatMessage } from "@/utils/ai-utils";
 
 export default function PersonalAI() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -18,37 +17,22 @@ export default function PersonalAI() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
-  const [showApiKeyPrompt, setShowApiKeyPrompt] = useState(false);
-  const [mistralKey, setMistralKey] = useState('');
-  const [openRouterKey, setOpenRouterKey] = useState('');
   const { toast } = useToast();
   
   const MAX_MESSAGES = 50;
   const MESSAGE_COOLDOWN = 1000;
-  const lastMessageTime = useState<number>(0);
+  const [lastMessageTime, setLastMessageTime] = useState<number>(0);
   
-  // Check if API keys exist in local storage on component mount
+  // Send initial greeting message when the chat is opened for the first time
   useEffect(() => {
-    const storedMistralKey = localStorage.getItem('VITE_MISTRAL_API_KEY');
-    const storedOpenRouterKey = localStorage.getItem('VITE_OPENROUTER_API_KEY');
-    
-    if (storedMistralKey) {
-      // @ts-ignore - We know this is safe in the browser
-      import.meta.env.VITE_MISTRAL_API_KEY = storedMistralKey;
-      setMistralKey(storedMistralKey);
+    if (isOpen && messages.length === 0) {
+      const initialMessage: Message = {
+        type: 'ai',
+        content: "Hi there! 👋 I'm Astro, your guide to Nithin Varma's portfolio. Ask me anything about Nithin's education, skills, projects, or achievements! by NithinVarma"
+      };
+      setMessages([initialMessage]);
     }
-    
-    if (storedOpenRouterKey) {
-      // @ts-ignore - We know this is safe in the browser
-      import.meta.env.VITE_OPENROUTER_API_KEY = storedOpenRouterKey;
-      setOpenRouterKey(storedOpenRouterKey);
-    }
-    
-    // Show API key prompt if no keys are available
-    if (!storedMistralKey && !storedOpenRouterKey) {
-      setShowApiKeyPrompt(true);
-    }
-  }, []);
+  }, [isOpen, messages.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +47,7 @@ export default function PersonalAI() {
     }
 
     const now = Date.now();
-    if (now - lastMessageTime[0] < MESSAGE_COOLDOWN) {
+    if (now - lastMessageTime < MESSAGE_COOLDOWN) {
       toast({
         title: "Please wait",
         description: "A moment before sending another message.",
@@ -89,10 +73,16 @@ export default function PersonalAI() {
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     setInput('');
-    lastMessageTime[1](now);
+    setLastMessageTime(now);
 
     try {
-      const aiResponseContent = await generateAIResponse(input, personalInfo);
+      // Prepare the chat history for the API
+      const chatHistory = messages.map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      }));
+
+      const aiResponseContent = await sendChatMessage(input, chatHistory);
       const aiResponse: Message = {
         type: 'ai',
         content: aiResponseContent
@@ -103,34 +93,13 @@ export default function PersonalAI() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to get AI response. Please try again.",
+        description: "Failed to get a response. Please try again.",
         variant: "destructive",
       });
       console.error('AI response error:', error);
-      setShowApiKeyPrompt(true);
     } finally {
       setIsLoading(false);
     }
-  };
-  
-  const saveApiKeys = () => {
-    if (mistralKey) {
-      localStorage.setItem('VITE_MISTRAL_API_KEY', mistralKey);
-      // @ts-ignore - We know this is safe in the browser
-      import.meta.env.VITE_MISTRAL_API_KEY = mistralKey;
-    }
-    
-    if (openRouterKey) {
-      localStorage.setItem('VITE_OPENROUTER_API_KEY', openRouterKey);
-      // @ts-ignore - We know this is safe in the browser
-      import.meta.env.VITE_OPENROUTER_API_KEY = openRouterKey;
-    }
-    
-    setShowApiKeyPrompt(false);
-    toast({
-      title: "API Keys Saved",
-      description: "Your API keys have been saved for this session.",
-    });
   };
 
   return (
@@ -149,105 +118,39 @@ export default function PersonalAI() {
                 <div className="flex items-center justify-between mb-2 sm:mb-4">
                   <div className="flex items-center gap-2">
                     <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                    <h3 className="text-base sm:text-lg font-semibold">My AI Assistant</h3>
+                    <h3 className="text-base sm:text-lg font-semibold">Astro</h3>
+                    <span className="text-xs text-muted-foreground">by NithinVarma</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setShowApiKeyPrompt(true)}
-                    >
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
                 
-                {showApiKeyPrompt ? (
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-medium">Enter your API Keys</h4>
-                    <div className="space-y-2">
-                      <label className="text-xs">
-                        Mistral AI Key:
-                        <input 
-                          type="password"
-                          className="w-full p-2 mt-1 text-xs border rounded"
-                          value={mistralKey}
-                          onChange={(e) => setMistralKey(e.target.value)}
-                          placeholder="Enter Mistral AI key"
-                        />
-                      </label>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs">
-                        OpenRouter Key:
-                        <input 
-                          type="password"
-                          className="w-full p-2 mt-1 text-xs border rounded"
-                          value={openRouterKey}
-                          onChange={(e) => setOpenRouterKey(e.target.value)}
-                          placeholder="Enter OpenRouter key"
-                        />
-                      </label>
-                    </div>
-                    <div className="flex gap-2 pt-2">
-                      <Button 
-                        onClick={saveApiKeys}
-                        className="text-xs h-8"
-                        size="sm"
-                      >
-                        Save Keys
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowApiKeyPrompt(false)}
-                        className="text-xs h-8"
-                        size="sm"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Note: API keys are stored in your browser's local storage, not on our servers.
-                    </p>
+                <ScrollArea className="h-[280px] sm:h-[320px] md:h-[400px] pr-2 sm:pr-4">
+                  <div className="space-y-3 sm:space-y-4">
+                    {messages.map((message, index) => (
+                      <ChatMessage key={index} message={message} />
+                    ))}
+                    {isLoading && <ChatMessage isLoading />}
                   </div>
-                ) : (
-                  <>
-                    <ScrollArea className="h-[280px] sm:h-[320px] md:h-[400px] pr-2 sm:pr-4">
-                      <div className="space-y-3 sm:space-y-4">
-                        {messages.length === 0 && (
-                          <div className="text-xs sm:text-sm text-center text-muted-foreground p-4">
-                            Hi! I'm your AI assistant. Ask me anything!
-                          </div>
-                        )}
-                        {messages.map((message, index) => (
-                          <ChatMessage key={index} message={message} />
-                        ))}
-                        {isLoading && <ChatMessage isLoading />}
-                      </div>
-                    </ScrollArea>
+                </ScrollArea>
 
-                    <ChatInput
-                      input={input}
-                      setInput={setInput}
-                      onSubmit={handleSubmit}
-                      isDisabled={isLoading || messageCount >= MAX_MESSAGES || showApiKeyPrompt}
-                    />
+                <ChatInput
+                  input={input}
+                  setInput={setInput}
+                  onSubmit={handleSubmit}
+                  isDisabled={isLoading || messageCount >= MAX_MESSAGES}
+                />
 
-                    {messageCount > 0 && (
-                      <div className="text-xs text-muted-foreground text-center">
-                        {MAX_MESSAGES - messageCount} messages remaining
-                      </div>
-                    )}
-                  </>
+                {messageCount > 0 && (
+                  <div className="text-xs text-muted-foreground text-center">
+                    {MAX_MESSAGES - messageCount} messages remaining
+                  </div>
                 )}
               </CardContent>
             </Card>

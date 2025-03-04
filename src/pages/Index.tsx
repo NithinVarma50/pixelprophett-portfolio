@@ -6,6 +6,7 @@ import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Achievements from "@/components/Achievements";
 import Conclusion from "@/components/Conclusion";
+import PersonalAI from "@/components/PersonalAI";
 import { motion, useScroll, useSpring } from "framer-motion";
 
 const Index = () => {
@@ -40,6 +41,7 @@ const Index = () => {
       <Projects />
       <Achievements />
       <Conclusion />
+      <PersonalAI />
       
       {/* Scroll to top button that appears when scrolling down */}
       <motion.button
