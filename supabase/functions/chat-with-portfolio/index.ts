@@ -33,6 +33,12 @@ serve(async (req) => {
   try {
     const { message, chatHistory } = await req.json();
     
+    // Check if the API key is available
+    if (!openRouterApiKey) {
+      console.error("OpenRouter API key is not configured");
+      throw new Error("OpenRouter API key is not configured");
+    }
+    
     // Prepare the messages for the API
     const messages = [
       { role: "system", content: systemPrompt }
@@ -66,12 +72,14 @@ serve(async (req) => {
       }),
     });
     
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("OpenRouter API error:", JSON.stringify(errorData));
+      throw new Error(`API request failed: ${errorData.error?.message || response.statusText || 'Unknown error'}`);
+    }
+    
     const data = await response.json();
     console.log("OpenRouter API response:", JSON.stringify(data));
-    
-    if (!response.ok) {
-      throw new Error(`API request failed: ${data.error?.message || 'Unknown error'}`);
-    }
     
     const aiResponse = data.choices[0].message.content;
     

@@ -13,6 +13,11 @@ export async function sendChatMessage(message: string, chatHistory: any[] = []) 
       throw new Error(error.message || "Failed to get a response");
     }
 
+    if (data.error) {
+      console.error("Error returned from chat-with-portfolio:", data.error);
+      throw new Error(data.error || "Failed to get a response from AI");
+    }
+
     return data.response;
   } catch (error) {
     console.error("Error in sendChatMessage:", error);
