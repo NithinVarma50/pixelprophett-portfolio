@@ -1,6 +1,8 @@
 
+export type MessageType = "user" | "ai";
+
 export interface Message {
-  type: 'user' | 'ai';
+  type: MessageType;
   content: string;
 }
 
