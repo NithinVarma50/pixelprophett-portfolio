@@ -2,6 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+// Get the API key from environment variables
 const openRouterApiKey = Deno.env.get('OPENROUTER_API_KEY');
 
 const corsHeaders = {
@@ -36,8 +37,16 @@ serve(async (req) => {
     // Check if the API key is available
     if (!openRouterApiKey) {
       console.error("OpenRouter API key is not configured");
-      throw new Error("OpenRouter API key is not configured");
+      return new Response(JSON.stringify({ 
+        error: "OpenRouter API key is not configured. Please set the OPENROUTER_API_KEY in your Supabase Edge Functions secrets."
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
+
+    console.log("Processing chat message:", message);
+    console.log("API Key available:", !!openRouterApiKey);
     
     // Prepare the messages for the API
     const messages = [
@@ -56,11 +65,14 @@ serve(async (req) => {
     
     console.log("Sending request to OpenRouter API with messages:", JSON.stringify(messages));
     
+    // The API key you provided in the message
+    const apiKey = "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";
+    
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${openRouterApiKey}`,
+        "Authorization": `Bearer ${apiKey}`,
         "HTTP-Referer": "https://nithinvarma-portfolio.lovable.dev",
         "X-Title": "Nithin Varma Portfolio Chatbot"
       },
@@ -73,9 +85,23 @@ serve(async (req) => {
     });
     
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch (e) {
+        errorData = { text: errorText };
+      }
+      
+      console.error("OpenRouter API error status:", response.status);
       console.error("OpenRouter API error:", JSON.stringify(errorData));
-      throw new Error(`API request failed: ${errorData.error?.message || response.statusText || 'Unknown error'}`);
+      
+      return new Response(JSON.stringify({ 
+        error: `API request failed: ${errorData.error?.message || response.statusText || 'Unknown error'}`
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
     
     const data = await response.json();
