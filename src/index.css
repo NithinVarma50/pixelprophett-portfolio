@@ -36,9 +36,20 @@
     @apply border-border selection:bg-primary/20;
   }
   
+  html {
+    scroll-behavior: smooth;
+    @apply overflow-x-hidden;
+  }
+  
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    /* Improve paint performance */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .playfair {
@@ -53,9 +64,58 @@
   
   .hover-card {
     @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
+    will-change: transform, box-shadow;
   }
 
   .section-padding {
     @apply px-4 py-12 sm:px-6 sm:py-16 md:px-12 md:py-20 lg:px-24;
   }
+  
+  /* Hardware-accelerated animations */
+  .hw-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    will-change: transform, opacity;
+  }
+  
+  /* Loki-themed animation classes */
+  .timeline-glow {
+    @apply bg-primary/20 blur-md;
+    animation: pulse-subtle 4s infinite alternate;
+  }
+  
+  .loki-shimmer {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary;
+    background-size: 200% auto;
+    animation: text-shimmer 3s infinite linear;
+  }
+}
+
+/* Custom Loki-themed animations */
+@keyframes loki-fade {
+  0% { opacity: 0; filter: blur(8px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
+@keyframes timeline-branch {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.05); }
+}
+
+@keyframes loki-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.animate-loki-fade {
+  animation: loki-fade 0.8s forwards;
+}
+
+.animate-timeline-branch {
+  animation: timeline-branch 8s infinite ease-in-out;
+}
+
+.animate-loki-pulse {
+  animation: loki-pulse 4s infinite ease-in-out;
 }

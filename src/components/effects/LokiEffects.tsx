@@ -1,0 +1,134 @@
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+const LokiEffects = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [viewportDimensions, setViewportDimensions] = useState({ 
+    width: typeof window !== 'undefined' ? window.innerWidth : 0, 
+    height: typeof window !== 'undefined' ? window.innerHeight : 0 
+  });
+
+  useEffect(() => {
+    // Handle mouse movement for interactive effects
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    // Handle viewport resizing
+    const handleResize = () => {
+      setViewportDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    // Add event listeners
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', handleResize);
+
+    // Initial setup
+    handleResize();
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Calculate positions for the effects based on mouse movement
+  const xFactor = mousePosition.x / viewportDimensions.width;
+  const yFactor = mousePosition.y / viewportDimensions.height;
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+      {/* Loki timeline/variant effects */}
+      <motion.div 
+        className="absolute w-[40vw] h-[40vh] rounded-full bg-primary/5 blur-[80px]"
+        animate={{
+          x: xFactor * 10 - 5,
+          y: yFactor * 10 - 5,
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          x: { duration: 3, ease: "easeOut" },
+          y: { duration: 3, ease: "easeOut" },
+          scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+        }}
+        style={{
+          left: "30%",
+          top: "20%",
+        }}
+      />
+      
+      {/* Secondary effects representing timeline branches */}
+      <motion.div 
+        className="absolute w-[30vw] h-[30vh] rounded-full bg-accent/10 blur-[60px]"
+        animate={{
+          x: -xFactor * 15,
+          y: -yFactor * 15,
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          x: { duration: 3, ease: "easeOut" },
+          y: { duration: 3, ease: "easeOut" },
+          scale: { duration: 10, repeat: Infinity, ease: "easeInOut", repeatType: "reverse" }
+        }}
+        style={{
+          right: "20%",
+          bottom: "30%",
+        }}
+      />
+      
+      {/* Subtle timeline lines */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={`timeline-${i}`}
+          className="absolute h-[1px] bg-primary/20 left-0 right-0"
+          style={{
+            top: `${25 + i * 25}%`,
+            width: "100%",
+          }}
+          animate={{
+            opacity: [0.1, 0.3, 0.1],
+            scaleX: [0.85, 1, 0.85]
+          }}
+          transition={{
+            duration: 8 + i * 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatType: "reverse"
+          }}
+        />
+      ))}
+      
+      {/* Loki-inspired glowing dots */}
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={`glow-${i}`}
+          className="absolute rounded-full bg-primary/30"
+          style={{
+            width: Math.random() * 4 + 2,
+            height: Math.random() * 4 + 2,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            filter: "blur(1px)"
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0, 1, 0],
+          }}
+          transition={{
+            duration: Math.random() * 5 + 5,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default LokiEffects;

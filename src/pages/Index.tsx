@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
@@ -7,6 +7,7 @@ import Projects from "@/components/Projects";
 import Achievements from "@/components/Achievements";
 import Conclusion from "@/components/Conclusion";
 import { motion, useScroll, useSpring } from "framer-motion";
+import LokiEffects from "@/components/effects/LokiEffects";
 
 const Index = () => {
   const { scrollYProgress } = useScroll();
@@ -15,14 +16,24 @@ const Index = () => {
     damping: 30,
     restDelta: 0.001
   });
+  
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     // Set scroll behavior globally
     document.documentElement.style.scrollBehavior = "smooth";
     
+    // Handle scroll position for button visibility
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > window.innerHeight * 0.5);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     // Cleanup on unmount
     return () => {
       document.documentElement.style.scrollBehavior = "auto";
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -34,6 +45,8 @@ const Index = () => {
         style={{ scaleX }}
       />
       
+      <LokiEffects />
+      
       <Hero />
       <About />
       <Skills />
@@ -41,22 +54,23 @@ const Index = () => {
       <Achievements />
       <Conclusion />
       
-      {/* Scroll to top button that appears when scrolling down */}
-      <motion.button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 text-white shadow-lg z-40 hover:bg-primary transition-colors"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ 
-          opacity: scrollYProgress.get() > 0.1 ? 1 : 0,
-          y: scrollYProgress.get() > 0.1 ? 0 : 20
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="18 15 12 9 6 15"></polyline>
-        </svg>
-      </motion.button>
+      {/* Optimized scroll to top button with conditional rendering */}
+      {showScrollButton && (
+        <motion.button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 text-white shadow-lg z-40 hover:bg-primary transition-colors"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </motion.button>
+      )}
     </main>
   );
 };
