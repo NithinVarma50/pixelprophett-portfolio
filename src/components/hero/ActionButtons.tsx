@@ -28,11 +28,12 @@ export default function ActionButtons({ scrollToProjects }: ActionButtonsProps) 
       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
         <a href="mailto:nithinvarma009@gmail.com" className="block w-full sm:w-auto">
           <Button 
+            variant="outline"
             size="lg" 
-            className="bg-secondary text-foreground border border-primary/30 hover:bg-secondary/90 hover:border-primary/50 relative overflow-hidden group w-full transition-all duration-300"
+            className="glass relative overflow-hidden group w-full transition-all duration-300"
           >
             <span className="relative z-10">Get in Touch</span>
-            <span className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+            <span className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
           </Button>
         </a>
       </motion.div>
