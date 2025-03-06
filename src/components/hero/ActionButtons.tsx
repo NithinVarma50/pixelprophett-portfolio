@@ -18,11 +18,10 @@ export default function ActionButtons({ scrollToProjects }: ActionButtonsProps) 
         <Button 
           variant="outline" 
           size="lg" 
-          className="glass relative overflow-hidden group w-full sm:w-auto"
+          className="bg-background/80 border border-white/10 text-white hover:bg-white/10 w-full sm:w-auto transition-all duration-300"
           onClick={scrollToProjects}
         >
-          <span className="relative z-10">View Projects</span>
-          <span className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+          <span>View Projects</span>
         </Button>
       </motion.div>
       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
@@ -30,10 +29,9 @@ export default function ActionButtons({ scrollToProjects }: ActionButtonsProps) 
           <Button 
             variant="outline"
             size="lg" 
-            className="glass relative overflow-hidden group w-full transition-all duration-300"
+            className="bg-background/80 border border-white/10 text-white hover:bg-white/10 w-full transition-all duration-300"
           >
-            <span className="relative z-10">Get in Touch</span>
-            <span className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+            <span>Get in Touch</span>
           </Button>
         </a>
       </motion.div>
