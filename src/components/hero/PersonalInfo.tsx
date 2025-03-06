@@ -45,14 +45,14 @@ export default function PersonalInfo() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <span className="text-lg sm:text-xl md:text-2xl text-muted-foreground">Polymath</span>
-        <span className="text-xl sm:text-2xl">•</span>
-        <span className="text-lg sm:text-xl md:text-2xl text-muted-foreground">Innovator</span>
-        <span className="text-xl sm:text-2xl">•</span>
-        <span className="text-lg sm:text-xl md:text-2xl text-muted-foreground">Entrepreneur</span>
+        <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Polymath</span>
+        <span className="text-xl sm:text-2xl text-primary">•</span>
+        <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Innovator</span>
+        <span className="text-xl sm:text-2xl text-primary">•</span>
+        <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Entrepreneur</span>
       </motion.div>
       <motion.p 
-        className="text-base sm:text-lg text-muted-foreground/80 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0"
+        className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.5 }}
