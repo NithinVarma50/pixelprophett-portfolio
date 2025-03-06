@@ -14,19 +14,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 120 100% 54%; /* Brighter Loki green */
+    --primary: 120 70% 54%; /* Less vibrant Loki green */
     --primary-foreground: 0 0% 0%; /* Black text on green */
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 120 100% 40%; /* Darker green accent */
+    --accent: 120 60% 40%; /* Less vibrant green accent */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 120 100% 50%; /* Loki green for focus rings */
+    --ring: 120 70% 50%; /* Less vibrant Loki green for focus rings */
     --radius: 0.5rem;
   }
 }
@@ -64,8 +64,8 @@
   }
   
   .loki-glass {
-    @apply bg-black/40 backdrop-blur-xl border border-[#39ff14]/20;
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+    @apply bg-black/40 backdrop-blur-xl border border-primary/20;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.05);
   }
   
   .hover-card {
@@ -75,12 +75,12 @@
 
   .loki-hover-card {
     @apply transition-all duration-300 hover:scale-[1.02];
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.05);
     will-change: transform, box-shadow;
   }
   
   .loki-hover-card:hover {
-    box-shadow: 0 0 25px rgba(57, 255, 20, 0.3);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
   }
 
   .section-padding {
@@ -95,21 +95,21 @@
     will-change: transform, opacity;
   }
   
-  /* Loki-themed animation classes */
+  /* Loki-themed animation classes with more subtle effects */
   .timeline-glow {
-    @apply bg-primary/20 blur-md;
+    @apply bg-primary/10 blur-md;
     animation: pulse-subtle 4s infinite alternate;
   }
   
   .loki-shimmer {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#39ff14] via-[#4dc44d] to-[#39ff14];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary/80 via-primary/60 to-primary/80;
     background-size: 200% auto;
     animation: text-shimmer 3s infinite linear;
   }
   
   .loki-border {
     position: relative;
-    border: 1px solid rgba(57, 255, 20, 0.3);
+    border: 1px solid rgba(57, 255, 20, 0.15);
   }
   
   .loki-border::before {
@@ -119,8 +119,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border: 1px solid rgba(57, 255, 20, 0.5);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    border: 1px solid rgba(57, 255, 20, 0.25);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -130,37 +130,47 @@
   }
   
   .loki-text {
-    @apply text-[#39ff14];
-    text-shadow: 0 0 5px rgba(57, 255, 20, 0.7);
+    @apply text-primary/90;
+    text-shadow: 0 0 3px rgba(57, 255, 20, 0.3);
   }
 }
 
-/* Custom Loki-themed animations */
+/* Subtle Loki-themed animations */
 @keyframes loki-fade {
   0% { opacity: 0; filter: blur(8px); }
   100% { opacity: 1; filter: blur(0); }
 }
 
 @keyframes timeline-branch {
-  0%, 100% { transform: scaleX(1); opacity: 0.5; }
-  50% { transform: scaleX(1.05); opacity: 0.8; }
+  0%, 100% { transform: scaleX(1); opacity: 0.3; }
+  50% { transform: scaleX(1.02); opacity: 0.5; }
 }
 
 @keyframes loki-pulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.02); }
 }
 
 @keyframes magic-flicker {
-  0%, 100% { opacity: 0.7; }
-  25% { opacity: 0.3; }
-  50% { opacity: 0.9; }
-  75% { opacity: 0.4; }
+  0%, 100% { opacity: 0.4; }
+  25% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+  75% { opacity: 0.3; }
 }
 
 @keyframes rune-rotate {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .animate-loki-fade {
