@@ -1,12 +1,12 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Achievements from "@/components/Achievements";
 import Conclusion from "@/components/Conclusion";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import LokiEffects from "@/components/effects/LokiEffects";
 
 const Index = () => {
@@ -18,31 +18,50 @@ const Index = () => {
   });
   
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const scrollingRef = useRef(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set scroll behavior globally
-    document.documentElement.style.scrollBehavior = "smooth";
-    
-    // Handle scroll position for button visibility
+    // Smoother scroll behavior
     const handleScroll = () => {
-      setShowScrollButton(window.scrollY > window.innerHeight * 0.5);
+      // Only update scroll button visibility if we're not already in middle of a transition
+      if (!scrollingRef.current) {
+        setShowScrollButton(window.scrollY > window.innerHeight * 0.5);
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     
     // Cleanup on unmount
     return () => {
-      document.documentElement.style.scrollBehavior = "auto";
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  
+  // Optimized scroll handler with debounce logic
+  const scrollToTop = () => {
+    scrollingRef.current = true;
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
+    
+    // Reset the scrolling ref after animation completes
+    setTimeout(() => {
+      scrollingRef.current = false;
+    }, 1000);
+  };
 
   return (
     <main className="min-h-screen relative">
-      {/* Progress bar that follows scroll position */}
+      {/* Progress bar with GPU acceleration */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left"
-        style={{ scaleX }}
+        ref={progressBarRef}
+        className="fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left will-change-transform"
+        style={{ 
+          scaleX,
+          translateZ: 0
+        }}
       />
       
       <LokiEffects />
@@ -57,12 +76,12 @@ const Index = () => {
       {/* Optimized scroll to top button with conditional rendering */}
       {showScrollButton && (
         <motion.button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 text-white shadow-lg z-40 hover:bg-primary transition-colors"
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 hover:bg-primary text-white shadow-lg z-40 transition-colors will-change-transform"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >

@@ -13,41 +13,44 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
-// Improved loading component with animation
+// Optimized loading component with smoother animations
 const LoadingFallback = () => (
   <div className="h-screen w-screen flex flex-col items-center justify-center bg-background">
     <motion.div
+      initial={{ opacity: 0.5, scale: 0.98 }}
       animate={{ 
         opacity: [0.5, 1, 0.5],
-        scale: [0.95, 1, 0.95]
+        scale: [0.98, 1, 0.98]
       }}
       transition={{ 
         repeat: Infinity, 
-        duration: 2
+        duration: 2,
+        ease: "easeInOut",
+        repeatType: "mirror"
       }}
-      className="text-3xl md:text-4xl font-bold playfair mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary"
+      className="text-3xl md:text-4xl font-bold playfair mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary will-change-transform"
     >
       Nithin Varma
     </motion.div>
     
-    <motion.div
-      className="w-16 h-1 bg-primary/50 rounded-full overflow-hidden relative"
-    >
+    <div className="w-48 h-1 bg-primary/20 rounded-full overflow-hidden">
       <motion.div 
-        className="absolute top-0 left-0 h-full bg-primary"
-        animate={{ x: ["-100%", "100%"] }}
+        className="h-full bg-primary origin-left"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
         transition={{ 
-          repeat: Infinity,
-          duration: 1.5,
-          ease: "easeInOut"
+          duration: 2,
+          ease: "easeInOut",
+          repeat: Infinity
         }}
+        style={{ willChange: "transform" }}
       />
-    </motion.div>
+    </div>
     
     <motion.p
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: 0.5 }}
+      transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
       className="text-muted-foreground mt-4 text-sm"
     >
       Loading portfolio...
