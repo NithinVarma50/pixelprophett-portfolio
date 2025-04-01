@@ -6,15 +6,22 @@ import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Achievements from "@/components/Achievements";
 import Conclusion from "@/components/Conclusion";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import LokiEffects from "@/components/effects/LokiEffects";
 
 const Index = () => {
-  const { scrollYProgress } = useScroll();
+  // Use a more direct scrollYProgress implementation
+  const { scrollYProgress } = useScroll({
+    // Measure the entire document scroll
+    offset: ["start start", "end end"]
+  });
+  
+  // Apply smoother spring physics for better performance
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
+    mass: 0.8 // Reduced mass for more responsive movement
   });
   
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -22,9 +29,8 @@ const Index = () => {
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Smoother scroll behavior
+    // Optimized scroll handler
     const handleScroll = () => {
-      // Only update scroll button visibility if we're not already in middle of a transition
       if (!scrollingRef.current) {
         setShowScrollButton(window.scrollY > window.innerHeight * 0.5);
       }
@@ -32,13 +38,11 @@ const Index = () => {
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Cleanup on unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
   
-  // Optimized scroll handler with debounce logic
   const scrollToTop = () => {
     scrollingRef.current = true;
     window.scrollTo({ 
@@ -46,7 +50,6 @@ const Index = () => {
       behavior: 'smooth' 
     });
     
-    // Reset the scrolling ref after animation completes
     setTimeout(() => {
       scrollingRef.current = false;
     }, 1000);
@@ -54,14 +57,15 @@ const Index = () => {
 
   return (
     <main className="min-h-screen relative">
-      {/* Progress bar with GPU acceleration */}
+      {/* Fixed progress bar with GPU acceleration and adjusted styles */}
       <motion.div 
         ref={progressBarRef}
-        className="fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left will-change-transform"
+        className="fixed top-0 left-0 right-0 h-1 bg-primary z-[100] origin-left transform-gpu"
         style={{ 
           scaleX,
-          translateZ: 0
+          transformOrigin: "left"
         }}
+        aria-hidden="true"
       />
       
       <LokiEffects />
@@ -73,11 +77,11 @@ const Index = () => {
       <Achievements />
       <Conclusion />
       
-      {/* Optimized scroll to top button with conditional rendering */}
+      {/* Scroll to top button */}
       {showScrollButton && (
         <motion.button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 hover:bg-primary text-white shadow-lg z-40 transition-colors will-change-transform"
+          className="fixed bottom-8 right-8 p-3 rounded-full bg-primary/80 hover:bg-primary text-white shadow-lg z-40 transition-colors transform-gpu"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
