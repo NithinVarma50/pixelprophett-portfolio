@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import { Project } from "@/lib/types";
@@ -124,14 +125,6 @@ const projects: Project[] = [
     description: "A cutting-edge street light technology focused on smart illumination and energy efficiency",
     category: "Smart City",
     icon: "lightbulb"
-  },
-  {
-    id: 14,
-    title: "Strategic Tic Tac Toe",
-    description: "A reimagined Tic Tac Toe with enhanced competitive rules, challenging traditional gameplay",
-    category: "Game Design",
-    icon: "gamepad",
-    link: "https://tic-tac-toe-by-nithinvarma.tiiny.site"
   }
 ];
 
