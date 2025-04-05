@@ -124,6 +124,14 @@ const projects: Project[] = [
     description: "A cutting-edge street light technology focused on smart illumination and energy efficiency",
     category: "Smart City",
     icon: "lightbulb"
+  },
+  {
+    id: 14,
+    title: "Strategic Tic Tac Toe",
+    description: "A reimagined Tic Tac Toe with enhanced competitive rules, challenging traditional gameplay",
+    category: "Game Design",
+    icon: "gamepad",
+    link: "https://tic-tac-toe-by-nithinvarma.tiiny.site"
   }
 ];
 
@@ -155,16 +163,23 @@ export default function Projects() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="hover-card glass h-full">
-                <CardContent className="p-4 sm:p-6 flex flex-col items-center text-center">
-                  <div className="mb-3 sm:mb-4">
-                    {iconMap[project.icon?.toLowerCase() || 'rocket']}
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{project.description}</p>
-                  <span className="text-xs text-primary/60 mt-2">{project.category}</span>
-                </CardContent>
-              </Card>
+              <a 
+                href={project.link} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block"
+              >
+                <Card className="hover-card glass h-full">
+                  <CardContent className="p-4 sm:p-6 flex flex-col items-center text-center">
+                    <div className="mb-3 sm:mb-4">
+                      {iconMap[project.icon?.toLowerCase() || 'rocket']}
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{project.description}</p>
+                    <span className="text-xs text-primary/60 mt-2">{project.category}</span>
+                  </CardContent>
+                </Card>
+              </a>
             </motion.div>
           ))}
         </div>
