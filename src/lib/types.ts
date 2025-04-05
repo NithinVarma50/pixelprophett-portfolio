@@ -5,4 +5,5 @@ export interface Project {
   description: string
   category: string
   icon: string
+  link?: string  // Optional link property for projects with external links
 }
