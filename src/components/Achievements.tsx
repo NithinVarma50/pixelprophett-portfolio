@@ -15,11 +15,6 @@ const achievements = [
     icon: <Star className="w-8 h-8 text-yellow-500" />
   },
   {
-    title: "Multiple Startup Initiatives",
-    description: "Conceptualized and developed 12+ innovative project ideas across various domains",
-    icon: <Award className="w-8 h-8 text-yellow-500" />
-  },
-  {
     title: "Community Leadership",
     description: "Active participant in entrepreneurship communities and tech meetups",
     icon: <Users className="w-8 h-8 text-yellow-500" />
