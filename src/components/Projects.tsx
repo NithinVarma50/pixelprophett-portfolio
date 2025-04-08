@@ -14,7 +14,9 @@ import {
   Car,
   Gamepad,
   Zap,
-  Lightbulb
+  Lightbulb,
+  Shirt,
+  ShoppingBag
 } from "lucide-react";
 
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -30,7 +32,9 @@ const iconMap: { [key: string]: React.ReactNode } = {
   car: <Car className="w-12 h-12 text-primary/60" />,
   gamepad: <Gamepad className="w-12 h-12 text-primary/60" />,
   zap: <Zap className="w-12 h-12 text-primary/60" />,
-  lightbulb: <Lightbulb className="w-12 h-12 text-primary/60" />
+  lightbulb: <Lightbulb className="w-12 h-12 text-primary/60" />,
+  shirt: <Shirt className="w-12 h-12 text-primary/60" />,
+  shoppingbag: <ShoppingBag className="w-12 h-12 text-primary/60" />
 };
 
 const projects: Project[] = [
@@ -110,6 +114,13 @@ const projects: Project[] = [
     description: "A cutting-edge street light technology focused on smart illumination and energy efficiency",
     category: "Smart City",
     icon: "lightbulb"
+  },
+  {
+    id: 12,
+    title: "VastraMukti",
+    description: "A stylish, functional clothing brand for modern adventurers, blending minimalism with innovation",
+    category: "Fashion Tech",
+    icon: "shirt"
   }
 ];
 
