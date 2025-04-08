@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import { Project } from "@/lib/types";
@@ -58,69 +57,55 @@ const projects: Project[] = [
   },
   {
     id: 4,
-    title: "Minimate",
-    description: "An affordable and portable computer software solution",
-    category: "Software",
-    icon: "monitor"
-  },
-  {
-    id: 5,
     title: "Cloudix",
     description: "A cloud gaming service offering optimized connectivity and performance",
     category: "Gaming",
     icon: "cloud"
   },
   {
-    id: 6,
+    id: 5,
     title: "Green Terra",
     description: "A plant-based food service with eco-friendly packaging and a sustainable approach",
     category: "Sustainability",
     icon: "leaf"
   },
   {
-    id: 7,
+    id: 6,
     title: "Feastify",
     description: "A cloud restaurant concept providing high-quality meals through online delivery",
     category: "Food Tech",
     icon: "utensils"
   },
   {
-    id: 8,
+    id: 7,
     title: "Waveroo",
     description: "A smart band and social media platform that connects people through real-life interactions",
     category: "Social Tech",
     icon: "radio"
   },
   {
-    id: 9,
+    id: 8,
     title: "Radianto",
     description: "A futuristic space station designed for advanced space exploration",
     category: "Space Tech",
     icon: "rocket"
   },
   {
-    id: 10,
+    id: 9,
     title: "Velox AI",
     description: "A high-performance car neural chip that enhances driving intelligence",
     category: "Automotive AI",
     icon: "car"
   },
   {
-    id: 11,
+    id: 10,
     title: "Evolvion",
     description: "A next-generation game designed with immersive and futuristic elements",
     category: "Gaming",
     icon: "gamepad"
   },
   {
-    id: 12,
-    title: "Gravix",
-    description: "An innovative electric vehicle (EV) car built for efficiency and performance",
-    category: "Automotive",
-    icon: "zap"
-  },
-  {
-    id: 13,
+    id: 11,
     title: "Lumin",
     description: "A cutting-edge street light technology focused on smart illumination and energy efficiency",
     category: "Smart City",
