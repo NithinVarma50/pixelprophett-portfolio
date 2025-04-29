@@ -25,6 +25,7 @@ const GameShowcase = memo(() => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
+  // Fixed the repeatType to use a valid value from "loop" | "reverse" | "mirror"
   const titleVariants = {
     initial: { textShadow: "0 0 5px rgba(57, 255, 20, 0.3)" },
     animate: { 

@@ -30,8 +30,8 @@ const SectionLoader = () => (
 const Index = () => {
   // Performance-optimized scroll tracking with reduced sensitivity
   const { scrollYProgress } = useScroll({
-    offset: ["start start", "end end"],
-    smooth: true
+    offset: ["start start", "end end"]
+    // Removed the 'smooth' property which is not part of UseScrollOptions
   });
   
   // More responsive spring physics with better performance
