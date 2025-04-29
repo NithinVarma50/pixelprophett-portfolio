@@ -49,7 +49,7 @@ export default function PersonalInfo() {
         <span className="text-xl sm:text-2xl text-primary">•</span>
         <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Innovator</span>
         <span className="text-xl sm:text-2xl text-primary">•</span>
-        <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Entrepreneur</span>
+        <span className="text-lg sm:text-xl md:text-2xl text-white font-medium">Aspiring Entrepreneur</span>
       </motion.div>
       <motion.p 
         className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0"
