@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
@@ -24,12 +25,12 @@ const GameShowcase = memo(() => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  // Fixed the repeatType to use a valid value from "loop" | "reverse" | "mirror"
+  // Fixed the repeatType to use an explicit valid value "reverse" instead of a string
   const titleVariants = {
     initial: { textShadow: "0 0 5px rgba(57, 255, 20, 0.3)" },
     animate: { 
       textShadow: ["0 0 5px rgba(57, 255, 20, 0.3)", "0 0 15px rgba(57, 255, 20, 0.6)", "0 0 5px rgba(57, 255, 20, 0.3)"],
-      transition: { duration: 3, repeat: Infinity, repeatType: "reverse" }
+      transition: { duration: 3, repeat: Infinity, repeatType: "reverse" as const }
     }
   };
 
