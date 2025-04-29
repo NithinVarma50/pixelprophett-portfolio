@@ -1,31 +1,46 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { motion } from "framer-motion";
 
-const LokiEffects = () => {
+// Memoize the component to prevent unnecessary re-renders
+const LokiEffects = memo(() => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [viewportDimensions, setViewportDimensions] = useState({ 
     width: typeof window !== 'undefined' ? window.innerWidth : 0, 
     height: typeof window !== 'undefined' ? window.innerHeight : 0 
   });
+  const throttleTimerRef = useRef<number | null>(null);
+  const resizeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Handle mouse movement for interactive effects
+    // Handle mouse movement for interactive effects with throttling
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (throttleTimerRef.current !== null) return;
+      
+      throttleTimerRef.current = window.setTimeout(() => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+        throttleTimerRef.current = null;
+      }, 50); // Throttle to 20fps for better performance
     };
 
-    // Handle viewport resizing
+    // Handle viewport resizing with debouncing
     const handleResize = () => {
-      setViewportDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+      if (resizeTimerRef.current !== null) {
+        clearTimeout(resizeTimerRef.current);
+      }
+      
+      resizeTimerRef.current = window.setTimeout(() => {
+        setViewportDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+        resizeTimerRef.current = null;
+      }, 250); // Debounce resize events
     };
 
     // Add event listeners
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
 
     // Initial setup
     handleResize();
@@ -34,28 +49,38 @@ const LokiEffects = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      if (throttleTimerRef.current !== null) {
+        clearTimeout(throttleTimerRef.current);
+      }
+      if (resizeTimerRef.current !== null) {
+        clearTimeout(resizeTimerRef.current);
+      }
     };
   }, []);
 
   // Calculate positions for the effects based on mouse movement
-  const xFactor = mousePosition.x / viewportDimensions.width;
-  const yFactor = mousePosition.y / viewportDimensions.height;
+  const xFactor = mousePosition.x / (viewportDimensions.width || 1);
+  const yFactor = mousePosition.y / (viewportDimensions.height || 1);
 
-  // Create trailing effects for mouse cursor
-  const cursorTrailPositions = Array.from({ length: 5 }).map((_, i) => ({
+  // Reduce number of trail positions for better performance
+  const cursorTrailPositions = Array.from({ length: 3 }).map((_, i) => ({
     delay: i * 0.1,
     scale: 1 - (i * 0.15)
   }));
 
+  // Reduce number of timeline branches and runes for better performance
+  const timelineBranches = 4;
+  const runeCount = 10;
+
   return (
     <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
-      {/* Main Loki magic green glow effect */}
+      {/* Main Loki magic green glow effect - optimized transitions */}
       <motion.div 
-        className="absolute w-[50vw] h-[50vh] rounded-full"
+        className="absolute w-[50vw] h-[50vh] rounded-full will-change-transform"
         animate={{
-          x: xFactor * 30 - 15,
-          y: yFactor * 30 - 15,
-          scale: [1, 1.1, 1],
+          x: xFactor * 20 - 10, // Reduced movement for better performance
+          y: yFactor * 20 - 10,
+          scale: [1, 1.05, 1],
           background: [
             "radial-gradient(circle, rgba(57, 255, 20, 0.25) 0%, rgba(0, 0, 0, 0) 70%)",
             "radial-gradient(circle, rgba(57, 255, 20, 0.35) 0%, rgba(0, 0, 0, 0) 70%)",
@@ -75,13 +100,13 @@ const LokiEffects = () => {
         }}
       />
       
-      {/* Loki staff magical energy effect */}
+      {/* Loki staff magical energy effect - optimized */}
       <motion.div 
-        className="absolute w-[40vw] h-[40vh] rounded-full"
+        className="absolute w-[40vw] h-[40vh] rounded-full will-change-transform"
         animate={{
-          x: -xFactor * 25,
-          y: -yFactor * 25,
-          scale: [1, 1.15, 1],
+          x: -xFactor * 15, // Reduced movement
+          y: -yFactor * 15,
+          scale: [1, 1.1, 1], // Reduced scale change
           background: [
             "radial-gradient(circle, rgba(18, 110, 10, 0.35) 0%, rgba(0, 0, 0, 0) 70%)",
             "radial-gradient(circle, rgba(57, 255, 20, 0.45) 0%, rgba(0, 0, 0, 0) 70%)",
@@ -103,7 +128,7 @@ const LokiEffects = () => {
       
       {/* TVA timeline effect */}
       <motion.div 
-        className="absolute w-[100%] h-[2px]"
+        className="absolute w-[100%] h-[2px] will-change-transform"
         style={{
           top: "50%",
           backgroundImage: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(57,255,20,0.8) 50%, rgba(0,0,0,0) 100%)",
@@ -112,7 +137,7 @@ const LokiEffects = () => {
         animate={{
           scaleX: [0.8, 1, 0.8],
           opacity: [0.4, 0.8, 0.4],
-          y: yFactor * 50 - 25
+          y: yFactor * 30 - 15 // Reduced movement
         }}
         transition={{
           scaleX: { duration: 6, repeat: Infinity, ease: "easeInOut" },
@@ -121,13 +146,13 @@ const LokiEffects = () => {
         }}
       />
       
-      {/* Timeline branch lines */}
-      {[...Array(6)].map((_, i) => (
+      {/* Timeline branch lines - reduced count */}
+      {[...Array(timelineBranches)].map((_, i) => (
         <motion.div
           key={`timeline-${i}`}
-          className="absolute h-[1px]"
+          className="absolute h-[1px] will-change-transform"
           style={{
-            top: `${10 + i * 16}%`,
+            top: `${10 + i * 20}%`, // More spaced out for better performance
             width: "100%",
             backgroundImage: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(57,255,20,0.5) 50%, rgba(0,0,0,0) 100%)",
             boxShadow: "0 0 8px rgba(57,255,20,0.4)",
@@ -135,7 +160,7 @@ const LokiEffects = () => {
           animate={{
             opacity: [0.1, 0.4, 0.1],
             scaleX: [0.9, 1, 0.9],
-            x: (i % 2 === 0 ? 1 : -1) * (xFactor * 20 - 10)
+            x: (i % 2 === 0 ? 1 : -1) * (xFactor * 15 - 7.5) // Reduced movement
           }}
           transition={{
             opacity: { duration: 4 + i, repeat: Infinity, ease: "easeInOut", repeatType: "reverse" },
@@ -145,14 +170,14 @@ const LokiEffects = () => {
         />
       ))}
       
-      {/* Loki-inspired glowing runes */}
-      {[...Array(15)].map((_, i) => (
+      {/* Loki-inspired glowing runes - reduced count */}
+      {[...Array(runeCount)].map((_, i) => (
         <motion.div
           key={`rune-${i}`}
-          className="absolute rounded-full bg-[#39ff14]"
+          className="absolute rounded-full bg-[#39ff14] will-change-transform"
           style={{
-            width: Math.random() * 8 + 2,
-            height: Math.random() * 8 + 2,
+            width: Math.random() * 6 + 2, // Smaller size
+            height: Math.random() * 6 + 2,
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
             boxShadow: "0 0 10px rgba(57,255,20,0.8), 0 0 20px rgba(57,255,20,0.4)",
@@ -171,11 +196,11 @@ const LokiEffects = () => {
         />
       ))}
 
-      {/* Mouse cursor magical effect */}
+      {/* Mouse cursor magical effect - reduced trail count */}
       {cursorTrailPositions.map((trail, i) => (
         <motion.div
           key={`cursor-trail-${i}`}
-          className="absolute w-[40px] h-[40px] rounded-full"
+          className="absolute w-[40px] h-[40px] rounded-full will-change-transform"
           style={{
             background: "radial-gradient(circle, rgba(57,255,20,0.5) 0%, rgba(0,0,0,0) 70%)",
             boxShadow: "0 0 15px rgba(57,255,20,0.3)",
@@ -206,30 +231,9 @@ const LokiEffects = () => {
         />
       ))}
 
-      {/* Sacred timeline "prune" effect - appears occasionally */}
+      {/* TVA logo effect - simplified for better performance */}
       <motion.div
-        className="absolute w-full h-[2px] left-0 origin-left"
-        style={{ 
-          top: "50%", 
-          background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,140,0,0.8) 50%, rgba(0,0,0,0) 100%)",
-          boxShadow: "0 0 30px rgba(255,140,0,0.8)"
-        }}
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{
-          scaleX: [0, 1, 0],
-          opacity: [0, 0.9, 0]
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          repeatDelay: 10,
-          ease: "easeInOut"
-        }}
-      />
-      
-      {/* TVA logo effect - creates a mysterious rune-like shape */}
-      <motion.div
-        className="absolute w-[200px] h-[200px]"
+        className="absolute w-[200px] h-[200px] will-change-transform"
         style={{
           left: "calc(50% - 100px)",
           top: "calc(30% - 100px)",
@@ -242,18 +246,20 @@ const LokiEffects = () => {
           borderColor: ["rgba(57,255,20,0.3)", "rgba(57,255,20,0.7)", "rgba(57,255,20,0.3)"],
           boxShadow: [
             "inset 0 0 20px rgba(57,255,20,0.1), 0 0 20px rgba(57,255,20,0.2)",
-            "inset 0 0 40px rgba(57,255,20,0.3), 0 0 40px rgba(57,255,20,0.4)",
+            "inset 0 0 30px rgba(57,255,20,0.3), 0 0 30px rgba(57,255,20,0.4)",
             "inset 0 0 20px rgba(57,255,20,0.1), 0 0 20px rgba(57,255,20,0.2)"
           ]
         }}
         transition={{
-          rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+          rotate: { duration: 30, repeat: Infinity, ease: "linear" }, // Slower rotation
           borderColor: { duration: 5, repeat: Infinity, ease: "easeInOut" },
           boxShadow: { duration: 5, repeat: Infinity, ease: "easeInOut" }
         }}
       />
     </div>
   );
-};
+});
+
+LokiEffects.displayName = "LokiEffects";
 
 export default LokiEffects;
