@@ -42,14 +42,29 @@ const LoadingFallback = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Improved particle count for a more magical effect
+  const particles = [...Array(20)].map((_, i) => ({
+    size: Math.random() * 4 + 1,
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    duration: 2 + Math.random() * 3,
+    delay: Math.random() * 2
+  }));
+
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-background relative overflow-hidden">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="h-screen w-screen flex flex-col items-center justify-center bg-background relative overflow-hidden"
+    >
       {/* Background glow effect */}
       <motion.div 
         className="absolute w-[50vw] h-[50vh] rounded-full bg-primary/5 filter blur-[100px]"
         animate={{
           scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
+          opacity: [0.3, 0.6, 0.3],
         }}
         transition={{
           duration: 4,
@@ -68,7 +83,12 @@ const LoadingFallback = () => {
         style={{ top: "50%" }}
         animate={{
           scaleX: [0, 1],
-          opacity: [0.2, 0.4, 0.2],
+          opacity: [0.2, 0.5, 0.2],
+          boxShadow: [
+            "0 0 5px rgba(57, 255, 20, 0.2)",
+            "0 0 15px rgba(57, 255, 20, 0.4)",
+            "0 0 5px rgba(57, 255, 20, 0.2)"
+          ]
         }}
         transition={{
           scaleX: {
@@ -79,20 +99,30 @@ const LoadingFallback = () => {
             duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
+          },
+          boxShadow: {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
           }
         }}
       />
       
-      {/* TVA-like circular rune */}
+      {/* TVA-like circular runes with enhanced glow effects */}
       <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full border border-primary/20"
+        className="absolute w-[300px] h-[300px] rounded-full border border-primary/30"
         style={{
           top: "calc(50% - 150px)",
           left: "calc(50% - 150px)",
         }}
         animate={{
           rotate: [0, 360],
-          borderColor: ["rgba(57, 255, 20, 0.2)", "rgba(57, 255, 20, 0.4)", "rgba(57, 255, 20, 0.2)"]
+          borderColor: ["rgba(57, 255, 20, 0.3)", "rgba(57, 255, 20, 0.6)", "rgba(57, 255, 20, 0.3)"],
+          boxShadow: [
+            "0 0 10px rgba(57, 255, 20, 0.1)",
+            "0 0 20px rgba(57, 255, 20, 0.3)",
+            "0 0 10px rgba(57, 255, 20, 0.1)"
+          ]
         }}
         transition={{
           rotate: {
@@ -104,19 +134,29 @@ const LoadingFallback = () => {
             duration: 4, 
             repeat: Infinity,
             ease: "easeInOut",
+          },
+          boxShadow: {
+            duration: 4, 
+            repeat: Infinity,
+            ease: "easeInOut",
           }
         }}
       />
       
       <motion.div
-        className="absolute w-[200px] h-[200px] rounded-full border border-primary/30"
+        className="absolute w-[200px] h-[200px] rounded-full border border-primary/40"
         style={{
           top: "calc(50% - 100px)",
           left: "calc(50% - 100px)",
         }}
         animate={{
           rotate: [360, 0],
-          borderColor: ["rgba(57, 255, 20, 0.3)", "rgba(57, 255, 20, 0.5)", "rgba(57, 255, 20, 0.3)"]
+          borderColor: ["rgba(57, 255, 20, 0.4)", "rgba(57, 255, 20, 0.7)", "rgba(57, 255, 20, 0.4)"],
+          boxShadow: [
+            "0 0 10px rgba(57, 255, 20, 0.2)",
+            "0 0 25px rgba(57, 255, 20, 0.4)",
+            "0 0 10px rgba(57, 255, 20, 0.2)"
+          ]
         }}
         transition={{
           rotate: {
@@ -128,34 +168,85 @@ const LoadingFallback = () => {
             duration: 4, 
             repeat: Infinity,
             ease: "easeInOut",
+          },
+          boxShadow: {
+            duration: 4, 
+            repeat: Infinity,
+            ease: "easeInOut",
+          }
+        }}
+      />
+
+      <motion.div
+        className="absolute w-[120px] h-[120px] rounded-full border border-primary/50"
+        style={{
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+        }}
+        animate={{
+          rotate: [0, -360],
+          borderColor: ["rgba(57, 255, 20, 0.5)", "rgba(57, 255, 20, 0.8)", "rgba(57, 255, 20, 0.5)"],
+          boxShadow: [
+            "0 0 15px rgba(57, 255, 20, 0.2)",
+            "0 0 30px rgba(57, 255, 20, 0.5)",
+            "0 0 15px rgba(57, 255, 20, 0.2)"
+          ]
+        }}
+        transition={{
+          rotate: {
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          },
+          borderColor: {
+            duration: 3, 
+            repeat: Infinity,
+            ease: "easeInOut",
+          },
+          boxShadow: {
+            duration: 3, 
+            repeat: Infinity,
+            ease: "easeInOut",
           }
         }}
       />
       
-      {/* Magic particles */}
-      {[...Array(8)].map((_, i) => (
+      {/* Magic particles with more dynamic animations */}
+      {particles.map((particle, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute w-1 h-1 bg-primary rounded-full"
+          className="absolute w-1 h-1 rounded-full bg-primary"
+          style={{
+            width: particle.size,
+            height: particle.size,
+          }}
           initial={{ 
-            x: Math.random() * 400 - 200,
-            y: Math.random() * 400 - 200,
-            opacity: 0 
+            x: particle.x,
+            y: particle.y,
+            opacity: 0,
+            scale: 0
           }}
           animate={{
             opacity: [0, 1, 0],
-            scale: [0, 1.5, 0],
+            scale: [0, 2, 0],
+            x: particle.x + (Math.random() * 200 - 100),
+            y: particle.y + (Math.random() * 200 - 100),
+            boxShadow: [
+              "0 0 0px rgba(57, 255, 20, 0)",
+              "0 0 10px rgba(57, 255, 20, 0.8)",
+              "0 0 0px rgba(57, 255, 20, 0)"
+            ]
           }}
           transition={{
-            duration: 2 + Math.random() * 2,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: particle.delay,
             ease: "easeInOut",
           }}
         />
       ))}
       
-      {/* Main content */}
+      {/* Main content with enhanced animations */}
       <div className="z-10 flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0.5, scale: 0.98 }}
@@ -164,7 +255,7 @@ const LoadingFallback = () => {
             scale: [0.98, 1, 0.98],
             textShadow: [
               "0 0 5px rgba(57, 255, 20, 0.3)",
-              "0 0 15px rgba(57, 255, 20, 0.5)",
+              "0 0 20px rgba(57, 255, 20, 0.6)",
               "0 0 5px rgba(57, 255, 20, 0.3)"
             ]
           }}
@@ -179,15 +270,27 @@ const LoadingFallback = () => {
           Nithin Varma
         </motion.div>
         
-        {/* Progress Bar */}
-        <div className="w-48 h-1 bg-primary/10 rounded-full overflow-hidden mb-2">
+        {/* Progress Bar with enhanced visual effects */}
+        <div className="w-48 h-1 bg-primary/10 rounded-full overflow-hidden mb-2 relative">
           <motion.div 
             className="h-full bg-primary origin-left transform-gpu"
             initial={{ scaleX: 0 }}
-            animate={{ scaleX: loadingProgress / 100 }}
+            animate={{ 
+              scaleX: loadingProgress / 100,
+              boxShadow: [
+                "0 0 5px rgba(57, 255, 20, 0.5)",
+                "0 0 15px rgba(57, 255, 20, 0.8)",
+                "0 0 5px rgba(57, 255, 20, 0.5)"
+              ]
+            }}
             transition={{ 
               duration: 0.3,
-              ease: "easeOut"
+              ease: "easeOut",
+              boxShadow: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
             }}
           />
         </div>
@@ -201,8 +304,24 @@ const LoadingFallback = () => {
           {loadingProgress === 100 ? (
             <motion.span
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              animate={{ 
+                opacity: 1,
+                color: [
+                  "rgba(57, 255, 20, 0.7)", 
+                  "rgba(57, 255, 20, 1)", 
+                  "rgba(57, 255, 20, 0.7)"
+                ]
+              }}
+              transition={{ 
+                duration: 0.3,
+                color: {
+                  delay: 0.3,
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }
+              }}
+              className="font-medium"
             >
               Ready
             </motion.span>
@@ -211,7 +330,7 @@ const LoadingFallback = () => {
           )}
         </motion.p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -221,13 +340,15 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <AnimatePresence mode="wait">
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </AnimatePresence>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
@@ -13,19 +14,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 120 50% 50%; /* More muted Loki green */
+    --primary: 120 60% 55%; /* Enhanced Loki green */
     --primary-foreground: 0 0% 0%; /* Black text on green */
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 120 40% 40%; /* More muted green accent */
+    --accent: 120 50% 45%; /* Enhanced green accent */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 120 50% 50%; /* More muted Loki green for focus rings */
+    --ring: 120 60% 55%; /* Enhanced Loki green for focus rings */
     --radius: 0.5rem;
   }
 }
@@ -63,7 +64,7 @@
   }
   
   .loki-glass {
-    @apply bg-black/40 backdrop-blur-xl border border-white/10;
+    @apply bg-black/40 backdrop-blur-xl border border-primary/10;
   }
   
   .hover-card {
@@ -73,12 +74,12 @@
 
   .loki-hover-card {
     @apply transition-all duration-300 hover:scale-[1.02];
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.05);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
     will-change: transform, box-shadow;
   }
   
   .loki-hover-card:hover {
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
   }
 
   .section-padding {
@@ -93,21 +94,21 @@
     will-change: transform, opacity;
   }
   
-  /* Loki-themed animation classes with more subtle effects */
+  /* Loki-themed animation classes with enhanced effects */
   .timeline-glow {
-    @apply bg-primary/10 blur-md;
+    @apply bg-primary/15 blur-md;
     animation: pulse-subtle 4s infinite alternate;
   }
   
   .loki-shimmer {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary/80 via-primary/60 to-primary/80;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary/90 via-primary/70 to-primary/90;
     background-size: 200% auto;
     animation: text-shimmer 3s infinite linear;
   }
   
   .loki-border {
     position: relative;
-    border: 1px solid rgba(57, 255, 20, 0.15);
+    border: 1px solid rgba(57, 255, 20, 0.2);
   }
   
   .loki-border::before {
@@ -117,8 +118,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border: 1px solid rgba(57, 255, 20, 0.25);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -128,12 +129,22 @@
   }
   
   .loki-text {
-    @apply text-primary/90;
-    text-shadow: 0 0 3px rgba(57, 255, 20, 0.3);
+    @apply text-primary;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.4);
+  }
+
+  .enhanced-shadow {
+    box-shadow: 0 10px 25px -5px rgba(57, 255, 20, 0.15), 
+                0 8px 10px -6px rgba(57, 255, 20, 0.1);
+  }
+
+  .enhanced-shadow:hover {
+    box-shadow: 0 20px 25px -5px rgba(57, 255, 20, 0.25), 
+                0 8px 10px -6px rgba(57, 255, 20, 0.15);
   }
 }
 
-/* Subtle Loki-themed animations */
+/* Enhanced Loki-themed animations */
 @keyframes loki-fade {
   0% { opacity: 0; filter: blur(8px); }
   100% { opacity: 1; filter: blur(0); }
@@ -141,19 +152,19 @@
 
 @keyframes timeline-branch {
   0%, 100% { transform: scaleX(1); opacity: 0.3; }
-  50% { transform: scaleX(1.02); opacity: 0.5; }
+  50% { transform: scaleX(1.05); opacity: 0.6; }
 }
 
 @keyframes loki-pulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.02); }
+  50% { opacity: 0.6; transform: scale(1.03); }
 }
 
 @keyframes magic-flicker {
-  0%, 100% { opacity: 0.4; }
-  25% { opacity: 0.2; }
-  50% { opacity: 0.5; }
-  75% { opacity: 0.3; }
+  0%, 100% { opacity: 0.5; }
+  25% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+  75% { opacity: 0.4; }
 }
 
 @keyframes rune-rotate {
@@ -162,8 +173,8 @@
 }
 
 @keyframes pulse-subtle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.5; }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes text-shimmer {
@@ -189,4 +200,44 @@
 
 .animate-rune-rotate {
   animation: rune-rotate 20s infinite linear;
+}
+
+/* New enhanced animations */
+@keyframes soft-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.6); 
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+  }
+}
+
+@keyframes slide-up-fade {
+  0% { 
+    opacity: 0;
+    transform: translateY(20px); 
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+.animate-soft-float {
+  animation: soft-float 4s infinite ease-in-out;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s infinite ease-in-out;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.5s forwards ease-out;
 }
