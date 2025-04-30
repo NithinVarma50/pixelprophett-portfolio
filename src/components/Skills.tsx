@@ -30,7 +30,7 @@ const skillCategories = [
     skills: [
       { name: "Strategic Thinking", icon: "🧠" },
       { name: "Creative Ideation", icon: "✨" },
-      { name: "Communication", icon: "💬" },
+      { name: "Developing Proficiency in communication", icon: "💬" },
       { name: "Adaptability", icon: "🔄" },
       { name: "Problem Solving", icon: "🎯" }
     ]
